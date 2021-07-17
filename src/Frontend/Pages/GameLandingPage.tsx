@@ -1,5 +1,5 @@
 import { Wallet, utils } from 'ethers';
-import _ from 'lodash';
+import _, { reduceRight } from 'lodash';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import GameManager from '../../Backend/GameLogic/GameManager';
