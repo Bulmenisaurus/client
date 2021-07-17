@@ -137,7 +137,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
                         </Btn>
                       ) : (
                         <>
-                          <Btn onClick={() => doUpgrade(branch)} disabled={!canUpgrade}>
+                          <Btn onClick={() => { new Audio('public/audio/HarderBetterFasterStronger.mp3').play(); return doUpgrade(branch) }} disabled={!canUpgrade}>
                             {'Upgrade'}
                           </Btn>{' '}
                           {planetAtMaxRank ? (
