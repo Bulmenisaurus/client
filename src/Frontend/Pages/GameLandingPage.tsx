@@ -1,5 +1,5 @@
 import { Wallet, utils } from 'ethers';
-import _ from 'lodash';
+import _, { reduceRight } from 'lodash';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import GameManager from '../../Backend/GameLogic/GameManager';
@@ -13,7 +13,7 @@ import {
   EmailResponse,
   submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
-import { neverResolves } from '../../Backend/Utils/Utils';
+import { neverResolves, collapseObject } from '../../Backend/Utils/Utils';
 import {
   Wrapper,
   GameWindowWrapper,
@@ -720,7 +720,10 @@ export default function GameLandingPage() {
         // indrect eval call: http://perfectionkills.com/global-eval-what-are-the-options/
         res = (1, eval)(terminalVariables + input);
         if (res !== undefined) {
-          terminal.current?.println(res.toString(), TerminalTextStyle.White);
+          // FIXME: doesn't work for `df` and `ui`, because the .constructor.name === 'gameObject'.
+          terminal.current?.println(res.constructor.name === 'Object' ? collapseObject(res as unknown as object) : res.toString(), TerminalTextStyle.White);
+        } else {
+          terminal.current?.println('undefined');
         }
       } catch (e) {
         res = e.message;
