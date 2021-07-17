@@ -649,9 +649,9 @@ export default function GameLandingPage() {
 
       terminal.current?.println(
         'We collect a minimal set of statistics such as SNARK proving' +
-          ' times and average transaction times across browsers, to help ' +
-          'us optimize performance and fix bugs. You can opt out of ' +
-          'this in the settings pane.'
+        ' times and average transaction times across browsers, to help ' +
+        'us optimize performance and fix bugs. You can opt out of ' +
+        'this in the settings pane.'
       );
 
       terminal.current?.newline();
@@ -716,8 +716,9 @@ export default function GameLandingPage() {
       const input = (await terminal.current?.getInput()) || '';
       let res = '';
       try {
+        const terminalVariables = 'p = ui.getSelectedPlanet();';
         // indrect eval call: http://perfectionkills.com/global-eval-what-are-the-options/
-        res = (1, eval)(input);
+        res = (1, eval)(terminalVariables + input);
         if (res !== undefined) {
           terminal.current?.println(res.toString(), TerminalTextStyle.White);
         }
