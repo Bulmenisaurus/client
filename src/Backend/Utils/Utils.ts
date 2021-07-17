@@ -276,3 +276,26 @@ export function getGasSettingGwei(
       return undefined;
   }
 }
+
+export const collapseObject = (object: object) => {
+  const keyValuePairs: string[] = [];
+  for (const [key, value] of Object.entries(object)) {
+    keyValuePairs.push(`${JSON.stringify(key)}: ${collapsedObjectValue(value)}`);
+  }
+
+  return `{${keyValuePairs.join(', ')}}`;
+};
+
+// kinda inspired by the browser console
+export const collapsedObjectValue = (value: any) => {
+  switch (value.constructor.name.toLowerCase()) {
+    case 'array':
+      return '[...]';
+
+    case 'object':
+      return '{...}';
+
+    default:
+      return '...';
+  }
+};
