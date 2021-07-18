@@ -7,7 +7,7 @@ import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor, RenderZIndex } from '../EngineTypes';
 import { QueuedArrival } from '@darkforest_eth/types';
 
-const { white, gold } = engineConsts.colors;
+const { white, rubyRed } = engineConsts.colors;
 const { enemyA, mineA } = engineConsts.colors.voyage;
 
 function getVoyageColor(fromPlanet: Planet, toPlanet: Planet, isMine: boolean) {
@@ -137,7 +137,7 @@ export default class VoyageRenderer {
             x: shipsLocationX,
             y: shipsLocationY + 0.5,
           },
-          [...gold, alpha],
+          [...rubyRed, alpha],
           -1,
           TextAlign.Center,
           TextAnchor.Bottom

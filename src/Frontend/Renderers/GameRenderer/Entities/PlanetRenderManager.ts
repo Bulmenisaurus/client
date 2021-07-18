@@ -9,7 +9,7 @@ import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
 import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
 
-const { whiteA, barbsA, gold } = engineConsts.colors;
+const { whiteA, barbsA, rubyRed } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
 
 /**
@@ -177,7 +177,7 @@ export default class PlanetRenderManager {
       tR.queueTextWorld(
         formatNumber(silver),
         { x: center.x, y: center.y + 1.1 * radius + 0.75 },
-        [...gold, alpha],
+        [...rubyRed, alpha],
         0,
         TextAlign.Center,
         TextAnchor.Bottom

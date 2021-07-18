@@ -20,6 +20,7 @@ export const engineConsts = {
       trim: [240, 227, 86] as RGBVec,
     },
     gold: [255, 221, 48] as RGBVec,
+    rubyRed: [255, 48, 120] as RGBVec,
     barbs: [153, 102, 102] as RGBVec,
     barbsA: [153, 102, 102, 255] as RGBAVec,
     white: [255, 255, 255] as RGBVec,
