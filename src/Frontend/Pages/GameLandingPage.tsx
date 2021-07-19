@@ -542,6 +542,7 @@ export default function GameLandingPage() {
       setGameManager(newGameManager);
 
       window.df = newGameManager;
+      df.stopExplore();
 
       const newGameUIManager = await GameUIManager.create(newGameManager, terminal);
 
