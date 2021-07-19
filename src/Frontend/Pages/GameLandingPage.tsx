@@ -719,11 +719,12 @@ export default function GameLandingPage() {
         const terminalVariables = 'p = ui.getSelectedPlanet();';
         // indrect eval call: http://perfectionkills.com/global-eval-what-are-the-options/
         res = (1, eval)(terminalVariables + input);
-        if (res !== undefined) {
+        if (res !== undefined && res !== null) {
           // FIXME: doesn't work for `df` and `ui`, because the .constructor.name === 'gameObject'.
           terminal.current?.println(res.constructor.name === 'Object' ? collapseObject(res as unknown as object) : res.toString(), TerminalTextStyle.White);
         } else {
-          terminal.current?.println('undefined');
+          // JSON.stringify(undefined) returns undefined, not "undefined"
+          terminal.current?.println(`${res}`);
         }
       } catch (e) {
         res = e.message;

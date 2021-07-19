@@ -288,7 +288,7 @@ export const collapseObject = (object: object) => {
 
 // kinda inspired by the browser console
 export const collapsedObjectValue = (value: any) => {
-  switch (value.constructor.name.toLowerCase()) {
+  switch (value?.constructor?.name?.toLowerCase?.()) {
     case 'array':
       return '[...]';
 
