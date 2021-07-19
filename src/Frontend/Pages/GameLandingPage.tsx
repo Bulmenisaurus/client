@@ -649,9 +649,9 @@ export default function GameLandingPage() {
 
       terminal.current?.println(
         'We collect a minimal set of statistics such as SNARK proving' +
-        ' times and average transaction times across browsers, to help ' +
-        'us optimize performance and fix bugs. You can opt out of ' +
-        'this in the settings pane.'
+          ' times and average transaction times across browsers, to help ' +
+          'us optimize performance and fix bugs. You can opt out of ' +
+          'this in the settings pane.'
       );
 
       terminal.current?.newline();
@@ -721,7 +721,12 @@ export default function GameLandingPage() {
         res = (1, eval)(terminalVariables + input);
         if (res !== undefined && res !== null) {
           // FIXME: doesn't work for `df` and `ui`, because the .constructor.name === 'gameObject'.
-          terminal.current?.println(res.constructor.name === 'Object' ? collapseObject(res as unknown as object) : res.toString(), TerminalTextStyle.White);
+          terminal.current?.println(
+            res.constructor.name === 'Object'
+              ? collapseObject(res as unknown as object)
+              : res.toString(),
+            TerminalTextStyle.White
+          );
         } else {
           // JSON.stringify(undefined) returns undefined, not "undefined"
           terminal.current?.println(`${res}`);
