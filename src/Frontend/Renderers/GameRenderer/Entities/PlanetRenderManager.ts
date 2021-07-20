@@ -8,6 +8,7 @@ import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
 import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
+import GameUIManager from '../../../../Backend/GameLogic/GameUIManager';
 
 const { whiteA, barbsA, rubyRed } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -220,6 +221,19 @@ export default class PlanetRenderManager {
     return myAtk;
   }
 
+  private getMouseAtkTime() {
+    const { gameUIManager: uiManager } = this.renderer;
+
+    const fromPlanet = uiManager.getMouseDownPlanet();
+    const toPlanet = uiManager.getHoveringOverPlanet();
+
+    if (!fromPlanet || !toPlanet) return undefined;
+
+    const myAtkTime = df.getTimeForMove(fromPlanet.locationId, toPlanet.locationId);
+
+    return myAtkTime;
+  }
+
   private queueRings(planet: Planet, center: WorldCoords, radius: number) {
     const { ringRenderer } = this.renderer;
     let idx = 0;
@@ -354,6 +368,7 @@ export default class PlanetRenderManager {
     const toPlanet = uiManager.getHoveringOverPlanet();
 
     const myAtk = this.getMouseAtk();
+    const myAtkTime = this.getMouseAtkTime();
 
     const moveHereInProgress =
       myAtk &&
@@ -367,6 +382,11 @@ export default class PlanetRenderManager {
         atkString += ` (+${formatNumber(myAtk)})`;
       } else {
         atkString += ` (-${formatNumber((myAtk * 100) / toPlanet.defense)})`;
+      }
+
+      if (myAtkTime) {
+        const atkTimeString = `${Math.round(myAtkTime)}s`;
+        atkString += ' ' + atkTimeString;
       }
 
       tR.queueTextWorld(atkString, textLoc, color, 1);
