@@ -1,14 +1,27 @@
-import { PlanetType, WorldCoords, Planet, Artifact, LocationId } from '@darkforest_eth/types';
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import {
+  Artifact,
+  LocatablePlanet,
+  LocationId,
+  Planet,
+  PlanetType,
+  WorldCoords,
+} from '@darkforest_eth/types';
+import { getRange } from '../../../../Backend/GameLogic/ArrivalUtils';
+import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
-import { hasOwner, formatNumber } from '../../../../Backend/Utils/Utils';
+import { formatNumber, hasOwner } from '../../../../Backend/Utils/Utils';
 import { isLocatable } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
 import { HatType } from '../../../Utils/Hats';
-import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
+<<<<<<< HEAD
 import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
 import GameUIManager from '../../../../Backend/GameLogic/GameUIManager';
+=======
+import Renderer from '../Renderer';
+>>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
 
 const { whiteA, barbsA, rubyRed } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -29,6 +42,7 @@ export default class PlanetRenderManager {
     const planet = renderInfo.planet;
     const renderAtReducedQuality = renderInfo.radii.radiusPixels <= 5 && highPerfMode;
     const isHovering = uiManager.getHoveringOverPlanet()?.locationId === planet.locationId;
+    const isSelected = uiManager.getSelectedPlanet()?.locationId === planet.locationId;
 
     let textAlpha = 255;
     if (renderInfo.radii.radiusPixels < 2 * maxRadius) {
@@ -106,6 +120,10 @@ export default class PlanetRenderManager {
         renderInfo.radii.radiusWorld,
         isHovering ? 0.2 : textAlpha
       );
+    }
+
+    if (isHovering && !isSelected) {
+      this.queueRangeRings(planet);
     }
   }
 
@@ -305,10 +323,9 @@ export default class PlanetRenderManager {
 
   private queueHat(planet: Planet, center: WorldCoords, radius: number) {
     const { gameUIManager: uiManager } = this.renderer;
+    const hoveringPlanet = uiManager.getHoveringOverPlanet() !== undefined;
     const myRotation = 0;
-
     const hatLevel = planet.hatLevel;
-
     const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     if (hatLevel > 0) {
@@ -331,6 +348,7 @@ export default class PlanetRenderManager {
         1.2 * radius * hatScale,
         radius,
         myRotation,
+        hoveringPlanet,
         bg,
         base,
         hoverCoords
@@ -391,6 +409,61 @@ export default class PlanetRenderManager {
 
       tR.queueTextWorld(atkString, textLoc, color, 1);
     }
+  }
+
+  /**
+   * Renders rings around planet that show how far sending the given percentage of this planet's
+   * energy would be able to travel.
+   */
+  drawRangeAtPercent(planet: LocatablePlanet, pct: number) {
+    const { circleRenderer: cR, textRenderer: tR } = this.renderer;
+    const range = getRange(planet, pct);
+    const {
+      range: { dash },
+    } = engineConsts.colors;
+    cR.queueCircleWorld(planet.location.coords, range, [...dash, 255], 1, 1, true);
+    tR.queueTextWorld(
+      `${pct}%`,
+      { x: planet.location.coords.x, y: planet.location.coords.y + range },
+      [...dash, 255]
+    );
+  }
+
+  /**
+   * Renders three rings around the planet that show the player how far this planet can attack.
+   */
+  queueRangeRings(planet: LocatablePlanet) {
+    const { circleRenderer: cR, gameUIManager, textRenderer: tR } = this.renderer;
+    const {
+      range: { energy },
+    } = engineConsts.colors;
+    const { x, y } = planet.location.coords;
+
+    this.drawRangeAtPercent(planet, 100);
+    this.drawRangeAtPercent(planet, 50);
+    this.drawRangeAtPercent(planet, 25);
+
+    if (planet.owner === EMPTY_ADDRESS) return;
+
+    const percentForces = gameUIManager.getForcesSending(planet.locationId); // [0, 100]
+    const forces = (percentForces / 100) * planet.energy;
+    const scaledForces = (percentForces * planet.energy) / planet.energyCap;
+    const range = getRange(planet, scaledForces);
+
+    if (range > 1) {
+      cR.queueCircleWorld({ x, y }, range, [...energy, 255], 1, 1, true);
+      tR.queueTextWorld(
+        `${formatNumber(forces)}`,
+        { x, y: y + range },
+        [...energy, 255],
+        0,
+        TextAlign.Center,
+        TextAnchor.Bottom
+      );
+    }
+
+    // so that it draws below the planets
+    cR.flush();
   }
 
   queuePlanets(

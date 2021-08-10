@@ -1,17 +1,8 @@
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { EthAddress, Planet, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-import {
-  Planet,
-  EthAddress,
-  SpaceType,
-  Upgrade,
-  UpgradeBranchName,
-  GasPrices,
-} from '@darkforest_eth/types';
-import _ from 'lodash';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
-import { AutoGasSetting } from '../../Frontend/Utils/SettingsHooks';
 
 export const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -158,6 +149,7 @@ export const titleCase = (title: string): string =>
 export const hasOwner = (planet: Planet) => {
   return planet.owner !== EMPTY_ADDRESS;
 };
+<<<<<<< HEAD
 
 export function sleep<T>(timeout: number, returns?: T): Promise<T> {
   return new Promise<T>((resolve) => setTimeout(() => resolve(returns as T), timeout));
@@ -299,3 +291,5 @@ export const collapsedObjectValue = (value: any) => {
       return '...';
   }
 };
+=======
+>>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
