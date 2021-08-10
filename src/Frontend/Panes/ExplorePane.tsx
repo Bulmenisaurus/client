@@ -134,7 +134,7 @@ export function ExplorePane() {
   const windowManager = WindowManager.getInstance();
   const uiEmitter = UIEmitter.getInstance();
 
-  const [mining, setMining] = useState<boolean>(false);
+  const [mining, setMining] = useState<boolean>(uiManager.isMining());
   useEffect(() => {
     if (mining) uiManager?.startExplore();
     else {
