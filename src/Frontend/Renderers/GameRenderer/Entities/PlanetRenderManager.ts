@@ -16,18 +16,9 @@ import Viewport from '../../../Game/Viewport';
 import { HatType } from '../../../Utils/Hats';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
-import GameUIManager from '../../../../Backend/GameLogic/GameUIManager';
-=======
 import Renderer from '../Renderer';
->>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
-=======
-import Renderer from '../Renderer';
->>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 
-const { whiteA, barbsA, rubyRed } = engineConsts.colors;
+const { whiteA, barbsA, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
 
 /**
@@ -200,7 +191,7 @@ export default class PlanetRenderManager {
       tR.queueTextWorld(
         formatNumber(silver),
         { x: center.x, y: center.y + 1.1 * radius + 0.75 },
-        [...rubyRed, alpha],
+        [...gold, alpha],
         0,
         TextAlign.Center,
         TextAnchor.Bottom
@@ -241,19 +232,6 @@ export default class PlanetRenderManager {
     );
 
     return myAtk;
-  }
-
-  private getMouseAtkTime() {
-    const { gameUIManager: uiManager } = this.renderer;
-
-    const fromPlanet = uiManager.getMouseDownPlanet();
-    const toPlanet = uiManager.getHoveringOverPlanet();
-
-    if (!fromPlanet || !toPlanet) return undefined;
-
-    const myAtkTime = df.getTimeForMove(fromPlanet.locationId, toPlanet.locationId);
-
-    return myAtkTime;
   }
 
   private queueRings(planet: Planet, center: WorldCoords, radius: number) {
@@ -390,7 +368,6 @@ export default class PlanetRenderManager {
     const toPlanet = uiManager.getHoveringOverPlanet();
 
     const myAtk = this.getMouseAtk();
-    const myAtkTime = this.getMouseAtkTime();
 
     const moveHereInProgress =
       myAtk &&
@@ -404,11 +381,6 @@ export default class PlanetRenderManager {
         atkString += ` (+${formatNumber(myAtk)})`;
       } else {
         atkString += ` (-${formatNumber((myAtk * 100) / toPlanet.defense)})`;
-      }
-
-      if (myAtkTime) {
-        const atkTimeString = `${Math.round(myAtkTime)}s`;
-        atkString += ' ' + atkTimeString;
       }
 
       tR.queueTextWorld(atkString, textLoc, color, 1);

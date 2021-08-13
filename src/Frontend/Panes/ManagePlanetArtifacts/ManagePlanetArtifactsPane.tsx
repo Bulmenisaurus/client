@@ -6,17 +6,7 @@ import {
   PaddedRecommendedModalWidth,
   Underline,
 } from '../../Components/CoreUI';
-<<<<<<< HEAD
-import {
-  useAccount,
-  useMyArtifacts,
-  usePlanet,
-  usePopAllOnSelectedPlanetChanged,
-  useUIManager,
-} from '../../Utils/AppHooks';
-=======
 import { useAccount, useMyArtifacts, usePlanet, useUIManager } from '../../Utils/AppHooks';
->>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/ModalPane';
 import { ManageArtifactsPane } from './ManageArtifacts';
@@ -45,34 +35,20 @@ export function ManagePlanetArtifactsHelpContent() {
  * activating, and deactivating artifacts.
  */
 export function ManagePlanetArtifactsPane({
-<<<<<<< HEAD
-  planetId,
-  modal,
-}: {
-  planetId: LocationId | undefined;
-=======
   initialPlanetId,
   modal,
 }: {
   initialPlanetId: LocationId | undefined;
->>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
   modal: ModalHandle;
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
-<<<<<<< HEAD
-  const planet = usePlanet(uiManager, planetId);
-
-=======
   const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planet = usePlanet(uiManager, planetId).value;
->>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const myArtifacts = useMyArtifacts(uiManager);
   const onPlanet = uiManager.getArtifactsWithIds(planet?.heldArtifactIds || []);
   const roundOver = uiManager.isRoundOver();
-
-  usePopAllOnSelectedPlanetChanged(modal, planetId);
 
   const find = useCallback(() => {
     planet && uiManager.findArtifact(planet.locationId);
