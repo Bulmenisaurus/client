@@ -270,6 +270,10 @@ class PersistentChunkStore implements ChunkStore {
     await this.setKey('claimedPlanetIds', stringify(claimedCoordTupps));
   }
 
+  public async saveClaimedCoords(claimedCoordTupps: ClaimedCoords[]) {
+    await this.setKey('claimedPlanetIds', stringify(claimedCoordTupps));
+  }
+
   /**
    * Returns the explored chunk data for the given rectangle if that chunk has been mined. If this
    * chunk is entirely contained within another bigger chunk that has been mined, return that chunk.

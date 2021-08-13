@@ -490,17 +490,21 @@ class GameManager extends EventEmitter {
   private async refreshScoreboard() {
     try {
       const leaderboard = await loadLeaderboard();
+
       for (const entry of leaderboard.entries) {
         const player = this.players.get(entry.ethAddress);
         if (player) {
-          player.score = entry.score;
+          // current player's score is updated via `this.playerInterval`
+          if (player.address !== this.account) {
+            player.score = entry.score;
+          }
         }
       }
 
       this.playersUpdated$.publish();
     } catch (e) {
       // @todo - what do we do if we can't connect to the webserver? in general this should be a
-      // state of affairs because arenas is a thing.
+      // valid state of affairs because arenas is a thing.
     }
   }
 
@@ -518,6 +522,7 @@ class GameManager extends EventEmitter {
     this.persistentChunkStore.destroy();
     clearInterval(this.playerInterval);
     clearInterval(this.diagnosticsInterval);
+    clearInterval(this.scoreboardInterval);
     this.settingsSubscription?.unsubscribe();
   }
 
@@ -804,21 +809,17 @@ class GameManager extends EventEmitter {
   }
 
   private async hardRefreshPlayer(address: EthAddress): Promise<void> {
-    const player = await this.contractsAPI.getPlayerById(address);
+    const playerFromBlockchain = await this.contractsAPI.getPlayerById(address);
+    if (!playerFromBlockchain) return;
 
-    if (!player) {
-      return;
+    const localPlayer = this.getPlayer(address);
+
+    if (localPlayer?.twitter) {
+      playerFromBlockchain.twitter = localPlayer.twitter;
     }
 
-    const existingPlayerTwitter = this.players.get(address)?.twitter;
-    const existingPlayerScore = this.players.get(address)?.score;
-
-    if (existingPlayerTwitter) {
-      player.twitter = existingPlayerTwitter;
-      player.score = existingPlayerScore;
-    }
-
-    this.players.set(address, player);
+    this.players.set(address, playerFromBlockchain);
+    this.playersUpdated$.publish();
   }
 
   // Dirty hack for only refreshing properties on a planet and nothing else
@@ -1171,10 +1172,9 @@ class GameManager extends EventEmitter {
       .reduce((totalSoFar: number, nextPlanet: Planet) => totalSoFar + nextPlanet.energy, 0);
   }
 
-  public getPlayerScore(addr: EthAddress): number {
+  public getPlayerScore(addr: EthAddress): number | undefined {
     const player = this.players.get(addr);
-    if (!player) return 0;
-    return player?.score || 0;
+    return player?.score;
   }
 
   private initMiningManager(homeCoords: WorldCoords, cores?: number): void {
@@ -1336,15 +1336,12 @@ class GameManager extends EventEmitter {
   /**
    * Get the score of the currently logged-in account.
    */
-  getMyScore(): number {
+  getMyScore(): number | undefined {
     if (!this.account) {
-      return 0;
+      return undefined;
     }
     const player = this.players.get(this.account);
-    if (!player) {
-      return 0;
-    }
-    return player?.score || 0;
+    return player?.score;
   }
 
   /**
@@ -1655,6 +1652,10 @@ class GameManager extends EventEmitter {
       throw new Error("you can't reveal a planet you haven't discovered");
     }
 
+    if (planet.owner !== this.account) {
+      throw new Error("you can't claim a planet you down't own");
+    }
+
     if (!isLocatable(planet)) {
       throw new Error("you can't reveal a planet whose coordinates you don't know");
     }
@@ -1672,9 +1673,10 @@ class GameManager extends EventEmitter {
     if (!!this.entityStore.getUnconfirmedClaim()) {
       throw new Error("you're already broadcasting coordinates");
     }
+
     const myLastClaimTimestamp = this.players.get(this.account)?.lastClaimTimestamp;
     if (myLastClaimTimestamp && Date.now() < this.getNextClaimAvailableTimestamp()) {
-      throw new Error('still on cooldown for broadcasting');
+      throw new Error('still on cooldown for claiming');
     }
 
     // this is shitty. used for the popup window
@@ -1699,8 +1701,6 @@ class GameManager extends EventEmitter {
           TerminalTextStyle.Sub
         );
         this.terminal.current?.newline();
-
-        // blehh
         return this.contractsAPI.claim(snarkArgs, txIntent);
       })
       .catch((err) => {
@@ -1955,7 +1955,7 @@ class GameManager extends EventEmitter {
       const percentSpawn = (1 / this.contractConstants.PLANET_RARITY) * 100;
       const printProgress = 8;
       this.terminal.current?.print(`Each coordinate has a`);
-      this.terminal.current?.print(` ${percentSpawn}%`, TerminalTextStyle.White);
+      this.terminal.current?.print(` ${percentSpawn}%`, TerminalTextStyle.Text);
       this.terminal.current?.print(` chance of spawning a planet.`);
       this.terminal.current?.println('');
 

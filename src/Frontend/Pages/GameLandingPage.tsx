@@ -17,10 +17,6 @@ import {
   submitPlayerEmail,
   submitWhitelistKey,
 } from '../../Backend/Network/UtilityServerAPI';
-<<<<<<< HEAD
-import { neverResolves, collapseObject } from '../../Backend/Utils/Utils';
-=======
->>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
 import {
   GameWindowWrapper,
   TerminalToggler,
@@ -142,40 +138,40 @@ export function GameLandingPage() {
       terminal.current?.print('Champion', TerminalTextStyle.Sub);
       terminal.current?.newline();
 
-      terminal.current?.print('    v0.1       ', TerminalTextStyle.White);
-      terminal.current?.print('02/05/2020        ', TerminalTextStyle.White);
+      terminal.current?.print('    v0.1       ', TerminalTextStyle.Text);
+      terminal.current?.print('02/05/2020        ', TerminalTextStyle.Text);
       terminal.current?.printLink(
         'Dylan Field',
         () => {
           window.open('https://twitter.com/zoink');
         },
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
       );
       terminal.current?.newline();
-      terminal.current?.print('    v0.2       ', TerminalTextStyle.White);
-      terminal.current?.println('06/06/2020        Nate Foss', TerminalTextStyle.White);
-      terminal.current?.print('    v0.3       ', TerminalTextStyle.White);
-      terminal.current?.print('08/07/2020        ', TerminalTextStyle.White);
+      terminal.current?.print('    v0.2       ', TerminalTextStyle.Text);
+      terminal.current?.println('06/06/2020        Nate Foss', TerminalTextStyle.Text);
+      terminal.current?.print('    v0.3       ', TerminalTextStyle.Text);
+      terminal.current?.print('08/07/2020        ', TerminalTextStyle.Text);
       terminal.current?.printLink(
-        '[ANON] Singer',
+        '@hideandcleanse',
         () => {
           window.open('https://twitter.com/hideandcleanse');
         },
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
       );
       terminal.current?.newline();
-      terminal.current?.print('    v0.4       ', TerminalTextStyle.White);
-      terminal.current?.print('10/02/2020        ', TerminalTextStyle.White);
+      terminal.current?.print('    v0.4       ', TerminalTextStyle.Text);
+      terminal.current?.print('10/02/2020        ', TerminalTextStyle.Text);
       terminal.current?.printLink(
         'Jacob Rosenthal',
         () => {
           window.open('https://twitter.com/jacobrosenthal');
         },
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
       );
       terminal.current?.newline();
-      terminal.current?.print('    v0.5       ', TerminalTextStyle.White);
-      terminal.current?.print('12/25/2020        ', TerminalTextStyle.White);
+      terminal.current?.print('    v0.5       ', TerminalTextStyle.Text);
+      terminal.current?.print('12/25/2020        ', TerminalTextStyle.Text);
       terminal.current?.printElement(
         <TextPreview
           text={'0xb05d95422bf8d5024f9c340e8f7bd696d67ee3a9'}
@@ -185,14 +181,25 @@ export function GameLandingPage() {
       );
       terminal.current?.println('');
 
-      terminal.current?.print('    v0.6 r1    ', TerminalTextStyle.White);
-      terminal.current?.print('05/22/2021        ', TerminalTextStyle.White);
+      terminal.current?.print('    v0.6 r1    ', TerminalTextStyle.Text);
+      terminal.current?.print('05/22/2021        ', TerminalTextStyle.Text);
       terminal.current?.printLink(
         'Ansgar Dietrichs',
         () => {
           window.open('https://twitter.com/adietrichs');
         },
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
+      );
+      terminal.current?.newline();
+
+      terminal.current?.print('    v0.6 r2    ', TerminalTextStyle.Text);
+      terminal.current?.print('06/28/2021        ', TerminalTextStyle.Text);
+      terminal.current?.printLink(
+        '@orden_gg',
+        () => {
+          window.open('https://twitter.com/orden_gg');
+        },
+        TerminalTextStyle.Text
       );
       terminal.current?.newline();
       terminal.current?.newline();
@@ -211,7 +218,7 @@ export function GameLandingPage() {
       terminal.current?.print('(i) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Import private key.`);
       terminal.current?.println(``);
-      terminal.current?.println(`Select an option:`, TerminalTextStyle.White);
+      terminal.current?.println(`Select an option:`, TerminalTextStyle.Text);
 
       const userInput = await terminal.current?.getInput();
       if (userInput === 'a' && accounts.length > 0) {
@@ -237,7 +244,7 @@ export function GameLandingPage() {
         terminal.current?.println(`${accounts[i].address}`);
       }
       terminal.current?.println(``);
-      terminal.current?.println(`Select an account:`, TerminalTextStyle.White);
+      terminal.current?.println(`Select an account:`, TerminalTextStyle.Text);
 
       const selection = +((await terminal.current?.getInput()) || '');
       if (isNaN(selection) || selection > accounts.length) {
@@ -275,7 +282,7 @@ export function GameLandingPage() {
         terminal.current?.println('');
         terminal.current?.println(
           'Note: Burner wallets are stored in local storage.',
-          TerminalTextStyle.White
+          TerminalTextStyle.Text
         );
         terminal.current?.println('They are relatively insecure and you should avoid ');
         terminal.current?.println('storing substantial funds in them.');
@@ -285,7 +292,7 @@ export function GameLandingPage() {
           'burner wallets inaccessible, unless you export your private keys.'
         );
         terminal.current?.println('');
-        terminal.current?.println('Press any key to continue:', TerminalTextStyle.White);
+        terminal.current?.println('Press any key to continue:', TerminalTextStyle.Text);
 
         await terminal.current?.getInput();
         setStep(TerminalPromptStep.ACCOUNT_SET);
@@ -303,11 +310,11 @@ export function GameLandingPage() {
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       terminal.current?.println(
         'Enter the 0x-prefixed private key of the account you wish to import',
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
       );
       terminal.current?.println(
         "NOTE: THIS WILL STORE THE PRIVATE KEY IN YOUR BROWSER'S LOCAL STORAGE",
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
       );
       terminal.current?.println(
         'Local storage is relatively insecure. We recommend only importing accounts with zero-to-no funds.'
@@ -318,7 +325,7 @@ export function GameLandingPage() {
 
         addAccount(newSKey);
 
-        ethConnection?.setAccount(newAddr);
+        ethConnection?.setAccount(newSKey);
         terminal.current?.println(`Imported account with address ${newAddr}.`);
         setStep(TerminalPromptStep.ACCOUNT_SET);
       } catch (e) {
@@ -376,7 +383,7 @@ export function GameLandingPage() {
 
   const advanceStateFromAskHasWhitelistKey = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.print('Do you have a whitelist key?', TerminalTextStyle.White);
+      terminal.current?.print('Do you have a whitelist key?', TerminalTextStyle.Text);
       terminal.current?.println(' (y/n)');
       const userInput = await terminal.current?.getInput();
       if (userInput === 'y') {
@@ -418,7 +425,7 @@ export function GameLandingPage() {
       } else {
         terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
         terminal.current?.print(`Welcome, player `);
-        terminal.current?.println(address, TerminalTextStyle.White);
+        terminal.current?.println(address, TerminalTextStyle.Text);
         terminal.current?.print('Sent player $0.15 :) ', TerminalTextStyle.Blue);
         terminal.current?.printLink(
           '(View Transaction)',
@@ -438,7 +445,7 @@ export function GameLandingPage() {
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       terminal.current?.println(
         'Enter your email address to sign up for the whitelist.',
-        TerminalTextStyle.White
+        TerminalTextStyle.Text
       );
       const email = (await terminal.current?.getInput()) || '';
       terminal.current?.print('Response pending... ');
@@ -470,7 +477,7 @@ export function GameLandingPage() {
       const address = ethConnection?.getAddress();
       if (!address) throw new Error('not logged in');
 
-      terminal.current?.print('Enter your email address. ', TerminalTextStyle.White);
+      terminal.current?.print('Enter your email address. ', TerminalTextStyle.Text);
       terminal.current?.println("We'll use this email address to notify you if you win a prize.");
       const email = (await terminal.current?.getInput()) || '';
       const response = await submitPlayerEmail(email, address);
@@ -523,7 +530,6 @@ export function GameLandingPage() {
       setGameManager(newGameManager);
 
       window.df = newGameManager;
-      df.stopExplore();
 
       const newGameUIManager = await GameUIManager.create(newGameManager, terminal);
 
@@ -554,7 +560,7 @@ export function GameLandingPage() {
 
   const advanceStateFromAskAddAccount = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.println('Import account home coordinates? (y/n)', TerminalTextStyle.White);
+      terminal.current?.println('Import account home coordinates? (y/n)', TerminalTextStyle.Text);
       terminal.current?.println(
         "If you're importing an account, make sure you know what you're doing."
       );
@@ -701,20 +707,10 @@ export function GameLandingPage() {
       const input = (await terminal.current?.getInput()) || '';
       let res = '';
       try {
-        const terminalVariables = 'p = ui.getSelectedPlanet();';
         // indrect eval call: http://perfectionkills.com/global-eval-what-are-the-options/
-        res = (1, eval)(terminalVariables + input);
-        if (res !== undefined && res !== null) {
-          // FIXME: doesn't work for `df` and `ui`, because the .constructor.name === 'gameObject'.
-          terminal.current?.println(
-            res.constructor.name === 'Object'
-              ? collapseObject(res as unknown as object)
-              : res.toString(),
-            TerminalTextStyle.White
-          );
-        } else {
-          // JSON.stringify(undefined) returns undefined, not "undefined"
-          terminal.current?.println(`${res}`);
+        res = (1, eval)(input);
+        if (res !== undefined) {
+          terminal.current?.println(res.toString(), TerminalTextStyle.Text);
         }
       } catch (e) {
         res = e.message;

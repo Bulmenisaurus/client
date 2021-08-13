@@ -6,6 +6,7 @@ import {
   PaddedRecommendedModalWidth,
   Underline,
 } from '../../Components/CoreUI';
+<<<<<<< HEAD
 import {
   useAccount,
   useMyArtifacts,
@@ -13,6 +14,9 @@ import {
   usePopAllOnSelectedPlanetChanged,
   useUIManager,
 } from '../../Utils/AppHooks';
+=======
+import { useAccount, useMyArtifacts, usePlanet, useUIManager } from '../../Utils/AppHooks';
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/ModalPane';
 import { ManageArtifactsPane } from './ManageArtifacts';
@@ -41,56 +45,68 @@ export function ManagePlanetArtifactsHelpContent() {
  * activating, and deactivating artifacts.
  */
 export function ManagePlanetArtifactsPane({
+<<<<<<< HEAD
   planetId,
   modal,
 }: {
   planetId: LocationId | undefined;
+=======
+  initialPlanetId,
+  modal,
+}: {
+  initialPlanetId: LocationId | undefined;
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
   modal: ModalHandle;
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
+<<<<<<< HEAD
   const planet = usePlanet(uiManager, planetId);
 
+=======
+  const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
+  const planet = usePlanet(uiManager, planetId).value;
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const myArtifacts = useMyArtifacts(uiManager);
-  const onPlanet = uiManager.getArtifactsWithIds(planet.value?.heldArtifactIds || []);
+  const onPlanet = uiManager.getArtifactsWithIds(planet?.heldArtifactIds || []);
   const roundOver = uiManager.isRoundOver();
 
   usePopAllOnSelectedPlanetChanged(modal, planetId);
 
   const find = useCallback(() => {
-    planet.value && uiManager.findArtifact(planet.value.locationId);
+    planet && uiManager.findArtifact(planet.locationId);
   }, [planet, uiManager]);
 
   const prospect = useCallback(() => {
-    planet.value && uiManager.prospectPlanet(planet.value.locationId);
+    planet && uiManager.prospectPlanet(planet.locationId);
   }, [planet, uiManager]);
 
   const withdraw = useCallback(
     (artifact: Artifact) => {
-      planet.value && uiManager.withdrawArtifact(planet.value.locationId, artifact?.id);
+      planet && uiManager.withdrawArtifact(planet.locationId, artifact?.id);
     },
     [planet, uiManager]
   );
 
   const deposit = useCallback(
     (artifact: Artifact) => {
-      artifact && planet.value && uiManager.depositArtifact(planet.value.locationId, artifact?.id);
+      artifact && planet && uiManager.depositArtifact(planet.locationId, artifact?.id);
     },
     [planet, uiManager]
   );
 
   const activate = useCallback(
     async (artifact: Artifact) => {
-      if (planet.value && isLocatable(planet.value)) {
+      if (planet && isLocatable(planet)) {
         let targetPlanetId = undefined;
 
         if (artifact.artifactType === ArtifactType.Wormhole) {
-          const targetPlanet = await uiManager.startWormholeFrom(planet.value);
+          const targetPlanet = await uiManager.startWormholeFrom(planet);
           targetPlanetId = targetPlanet?.locationId;
         }
 
-        uiManager.activateArtifact(planet.value.locationId, artifact.id, targetPlanetId);
+        uiManager.activateArtifact(planet.locationId, artifact.id, targetPlanetId);
       }
     },
     [planet, uiManager]
@@ -98,19 +114,19 @@ export function ManagePlanetArtifactsPane({
 
   const deactivate = useCallback(
     (artifact: Artifact) => {
-      planet.value && uiManager.deactivateArtifact(planet.value.locationId, artifact.id);
+      planet && uiManager.deactivateArtifact(planet.locationId, artifact.id);
     },
     [planet, uiManager]
   );
 
   let content;
 
-  if (planet.value && myArtifacts.value && isLocatable(planet.value) && account) {
+  if (planet && myArtifacts.value && isLocatable(planet) && account) {
     content = (
       <ManageArtifactsPane
         artifactsInInventory={Array.from(myArtifacts.value.values())}
         artifactsOnPlanet={onPlanet}
-        planet={planet.value}
+        planet={planet}
         currentBlockNumber={currentBlockNumber}
         playerAddress={account}
         roundOver={roundOver}

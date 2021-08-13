@@ -223,14 +223,13 @@ export function ModalPane({
   const headerRef = useRef<HTMLDivElement>(document.createElement('div'));
   const push = useCallback(() => setZIndex(windowManager.getIndex()), [windowManager]);
   const [hasSetInitialPosition, setHasSetInitialPosition] = useState(false);
-  const [gameSize, setGameSize] =
-    useState<
-      | {
-          width: number;
-          height: number;
-        }
-      | undefined
-    >();
+  const [gameSize, setGameSize] = useState<
+    | {
+        width: number;
+        height: number;
+      }
+    | undefined
+  >();
   const [showingInformationSection, setShowingInformationSection] = useState(false);
   const onMouseDown = useCallback(
     (e: React.SyntheticEvent) => {
@@ -409,12 +408,14 @@ export function ModalPane({
 
   const content = (
     <>
-      {visible && !minimized && !showingHelp && (
-        <>
-          {renderedFrame}
-          {!renderedFrame && (typeof children === 'function' ? children(api) : children)}
-        </>
-      )}
+      {visible && !minimized && !showingHelp && renderedFrame}
+      <div
+        style={{
+          display: renderedFrame || !visible || minimized || showingHelp ? 'none' : undefined,
+        }}
+      >
+        {typeof children === 'function' ? children(api) : children}
+      </div>
     </>
   );
 

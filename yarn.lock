@@ -2322,8 +2322,6 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
-<<<<<<< HEAD
-=======
 
 "@types/readline-sync@^1.4.3":
   version "1.4.3"
@@ -2400,7 +2398,6 @@
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.2.tgz#3a84cf5ec3249439015e14049bd3161419bf9eae"
   integrity sha512-dIPoZ3g5gcx9zZEszaxLSVTvMReD3xxyyDnQUjA6IYDG9Ba2AV0otMPs+77sG9ojB4Qr2N2Vk5RnKeuA0X/0bg==
->>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
 
 "@types/resolve@1.17.1":
   version "1.17.1"
@@ -2468,7 +2465,10 @@
   integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 "@types/uuid@^8.3.1":
   version "8.3.1"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
@@ -5493,7 +5493,10 @@ eslint@^5.6.0:
     text-table "^0.2.0"
 
 eslint@^7.26.0, eslint@^7.30.0:
+<<<<<<< HEAD
 >>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
+=======
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
   version "7.30.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.30.0.tgz#6d34ab51aaa56112fd97166226c9a97f505474f8"
   integrity sha512-VLqz80i3as3NdloY44BQSJpFw534L9Oh+6zJOUaViV4JPd+DaHwutqP7tcpkW3YiXbK6s05RZl7yl7cQn+lijg==
@@ -7965,7 +7968,10 @@ junk@^3.1.0:
   integrity sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 just-debounce@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/just-debounce/-/just-debounce-1.1.0.tgz#2f81a3ad4121a76bc7cb45dbf704c0d76a8e5ddf"
@@ -9628,7 +9634,10 @@ p-retry@^3.0.1:
     retry "^0.12.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 p-retry@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/p-retry/-/p-retry-4.6.1.tgz#8fcddd5cdf7a67a0911a9cf2ef0e5df7f602316c"
@@ -9660,7 +9669,10 @@ p-timeout@^3.0.0, p-timeout@^3.1.0:
     p-finally "^1.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 p-timeout@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/p-timeout/-/p-timeout-4.1.0.tgz#788253c0452ab0ffecf18a62dff94ff1bd09ca0a"
@@ -10055,8 +10067,11 @@ prepend-http@^2.0.0:
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 prettier@^2.3.0:
 =======
+=======
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 prettier-plugin-organize-imports@^2.3.2:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-2.3.3.tgz#6877bcf8ca02569198d8f419c954a0d90a95de15"
