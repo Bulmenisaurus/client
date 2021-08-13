@@ -382,7 +382,7 @@ class NotificationManager extends EventEmitter {
       <span>
         You found a spacetime rip! Now you can move artifacts and silver in and out
         <br />
-        of the universe. Moving silver through a spacetime rip increases your score! <br />
+        of the universe. <br />
         Click to view <PlanetNameLink planet={planet} />.
       </span>
     );
@@ -423,8 +423,8 @@ class NotificationManager extends EventEmitter {
     this.notify(
       NotificationType.FoundFoundry,
       <span>
-        You have found a planet that can produce an artifact! Finding artifacts increases your
-        score. Also, artifacts can be used to power up your planets and moves! <br />
+        You have found a planet that can produce an artifact! Artifacts can be used to power up your
+        planets and moves! <br />
         Click to view <PlanetNameLink planet={planet} />
       </span>
     );
@@ -434,7 +434,8 @@ class NotificationManager extends EventEmitter {
       NotificationType.ArtifactProspected,
       <span>
         You prospected a Foundry! <br />
-        What artifacts are waiting to be found on? Click to view <PlanetNameLink planet={planet} />
+        What artifacts are waiting to be found on it? Click to view{' '}
+        <PlanetNameLink planet={planet} />
       </span>
     );
   }

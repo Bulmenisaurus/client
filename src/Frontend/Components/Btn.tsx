@@ -1,3 +1,4 @@
+import colorFn from 'color';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
@@ -54,6 +55,13 @@ const BtnElement = styled.span`
         span svg path {
           fill: ${dfstyles.colors.background};
         }
+      `}
+    }
+
+    &:active {
+      ${!disabled &&
+      css`
+        background: ${color || colorFn(dfstyles.colors.text).lighten(0.5).hex()};
       `}
     }
 

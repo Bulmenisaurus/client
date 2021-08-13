@@ -17,11 +17,15 @@ import { HatType } from '../../../Utils/Hats';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
 import GameUIManager from '../../../../Backend/GameLogic/GameUIManager';
 =======
 import Renderer from '../Renderer';
 >>>>>>> 32c99454a74e808d5f36a2f500f5e552fd29e489
+=======
+import Renderer from '../Renderer';
+>>>>>>> a11dd59595d72a52afd5f5e2eeace0fdda85c596
 
 const { whiteA, barbsA, rubyRed } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
