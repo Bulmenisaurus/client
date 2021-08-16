@@ -210,7 +210,7 @@ export class ContractsAPI extends EventEmitter {
   }
 
   public async setupEventListeners(): Promise<void> {
-    const { coreContract, gptCreditContract, scoreContract } = this;
+    const { coreContract, scoreContract } = this;
 
     const filter = {
       address: coreContract.address,
@@ -352,15 +352,6 @@ export class ContractsAPI extends EventEmitter {
 
     this.ethConnection.subscribeToContractEvents(coreContract, eventHandlers, filter);
 
-    gptCreditContract.on(
-      ContractEvent.ChangedGPTCreditPrice,
-      async (newPrice: EthersBN, _: Event) => {
-        this.emit(
-          ContractsAPIEvent.ChangedGPTCreditPrice,
-          parseFloat(ethers.utils.formatEther(newPrice.toString()))
-        );
-      }
-    );
     scoreContract.on(
       ContractEvent.LocationClaimed,
       async (revealerAddr: string, _previousClaimer: string, location: EthersBN, _: Event) => {
@@ -376,7 +367,7 @@ export class ContractsAPI extends EventEmitter {
   }
 
   public removeEventListeners(): void {
-    const { coreContract, gptCreditContract, scoreContract } = this;
+    const { coreContract, scoreContract } = this;
 
     coreContract.removeAllListeners(ContractEvent.PlayerInitialized);
     coreContract.removeAllListeners(ContractEvent.ArrivalQueued);
@@ -390,7 +381,6 @@ export class ContractsAPI extends EventEmitter {
     coreContract.removeAllListeners(ContractEvent.ArtifactDeactivated);
     coreContract.removeAllListeners(ContractEvent.LocationRevealed);
     coreContract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
-    gptCreditContract.removeAllListeners(ContractEvent.ChangedGPTCreditPrice);
     scoreContract.removeAllListeners(ContractEvent.LocationClaimed);
   }
 
@@ -844,6 +834,10 @@ export class ContractsAPI extends EventEmitter {
     return gptCreditsBalance.toNumber();
   }
 
+  /**
+   * If this player has a claimed planet, their score is the distance between the claimed planet and
+   * the center. If this player does not have a claimed planet, then the score is undefined.
+   */
   async getScoreV3(address: EthAddress | undefined): Promise<number | undefined> {
     if (address === undefined) return undefined;
 
@@ -884,7 +878,9 @@ export class ContractsAPI extends EventEmitter {
       LOCATION_REVEAL_COOLDOWN,
     } = await this.makeCall(this.coreContract.gameConstants);
 
-    const CLAIM_PLANET_COOLDOWN = await this.makeCall(this.scoreContract.gameConstants);
+    const CLAIM_PLANET_COOLDOWN = await (
+      await this.makeCall(this.scoreContract.gameConstants)
+    ).CLAIM_PLANET_COOLDOWN_SECONDS;
 
     const TOKEN_MINT_END_SECONDS = (
       await this.makeCall(this.coreContract.TOKEN_MINT_END_TIMESTAMP)

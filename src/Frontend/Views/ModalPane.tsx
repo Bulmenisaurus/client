@@ -345,7 +345,7 @@ export function ModalPane({
     }
     return () => {
       window.removeEventListener('mouseup', doMouseUp);
-      window.addEventListener('mouseleave', doMouseUp);
+      window.removeEventListener('mouseleave', doMouseUp);
     };
   }, [visible, clicking, mousedownCoords, coords]);
 
