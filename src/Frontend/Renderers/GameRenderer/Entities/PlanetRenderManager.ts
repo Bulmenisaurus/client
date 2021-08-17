@@ -13,6 +13,7 @@ import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
 import { formatNumber, hasOwner } from '../../../../Backend/Utils/Utils';
 import { isLocatable } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
+import { getSilverColor } from '../../../Styles/SilverColor';
 import { HatType } from '../../../Utils/Hats';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
@@ -191,7 +192,7 @@ export default class PlanetRenderManager {
       tR.queueTextWorld(
         formatNumber(silver),
         { x: center.x, y: center.y + 1.1 * radius + 0.75 },
-        [...gold, alpha],
+        [...getSilverColor(parseInt(planet.locationId.substr(4, 9), 16)), alpha],
         0,
         TextAlign.Center,
         TextAnchor.Bottom
