@@ -132,7 +132,7 @@ export function UpgradeDetailsPane({
                   </SectionPreview>
                   <SectionBuy>
                     <div>
-                      <Sub>Silver Available</Sub>: <span>{planet.silver}</span>
+                      <Sub>Silver to Upgrade</Sub>: <span>{planetAtMaxRank? 0 : Math.max(silverNeeded - planet.silver, 0)}</span>
                     </div>
                     <div>
                       <Sub>Silver Cost:</Sub> <SilverRequired planet={planet} />
