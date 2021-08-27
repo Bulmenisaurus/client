@@ -19,6 +19,7 @@ import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { PlanetDexPane } from '../Panes/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
 import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
+import { NotesPane } from '../Panes/NotesPane';
 import { PrivatePane } from '../Panes/PrivatePane';
 import { SettingsPane } from '../Panes/SettingsPane';
 import { Tooltip } from '../Panes/Tooltip';
@@ -32,6 +33,7 @@ import {
   TOGGLE_DIAGNOSTICS_PANE,
   TOGGLE_EXPLORE,
   TOGGLE_HELP_PANE,
+  TOGGLE_NOTEPAD_PANE,
   TOGGLE_PLUGINS_PANE,
   TOGGLE_SETTINGS_PANE,
   TOGGLE_TARGETTING,
@@ -126,6 +128,14 @@ export function GameWindowLayout({
     }, [setYourArtifactsOpen])
   );
 
+  const setNotesOpen = notepadHook[1];
+  useOnUp(
+    TOGGLE_NOTEPAD_PANE,
+    useCallback(() => {
+      setNotesOpen((value) => !value);
+    }, [setNotesOpen])
+  );
+
   const setDiagnosticsHookOpen = diagnosticsHook[1];
   useOnUp(
     TOGGLE_DIAGNOSTICS_PANE,
@@ -151,6 +161,7 @@ export function GameWindowLayout({
       <div ref={modalsContainerRef}>
         <HelpPane hook={helpHook} />
         <PlanetDexPane hook={planetdexHook} />
+        <NotesPane hook={notepadHook} />
         <TwitterVerifyPane hook={twitterVerifyHook} />
         <SettingsPane
           ethConnection={uiManager.getEthConnection()}
