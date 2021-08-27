@@ -21,6 +21,8 @@ export function Prospect({
 
   const energyPercentage = planet.energy / planet.energyCap;
   const enoughEnergy = enoughEnergyToProspect(planet);
+  const timeUntilCanProspect =
+    df.getEnergyCurveAtPercent(planet, 95.5) - new Date().getTime() / 1000;
 
   if (isProspecting) {
     button = (
@@ -49,16 +51,13 @@ export function Prospect({
         </>
       )}
 
-      <Sub>
-        Before you can find an artifact on a planet, you must prospect it. Prospecting determines
-        what artifact you will find!{' '}
-        {!enoughEnergy && (
-          <>
-            This planet must have over 95% energy to prospect for an artifact. (Currently{' '}
-            {energyPercentage.toFixed(0)}%)
-          </>
-        )}
-      </Sub>
+      {!enoughEnergy && (
+        <Sub>
+          This planet must have over 95% energy to prospect for an artifact. (Currently{' '}
+          {(100 * energyPercentage).toFixed(0)}%). 95% energy in {Math.round(timeUntilCanProspect)}{' '}
+          seconds
+        </Sub>
+      )}
     </>
   );
 }
