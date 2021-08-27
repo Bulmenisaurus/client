@@ -56,6 +56,7 @@ export function GameWindowLayout({
   const settingsHook = useState<boolean>(false);
   const privateHook = useState<boolean>(false);
   const pluginsHook = useState<boolean>(false);
+  const notepadHook = useState<boolean>(false);
   const modalsContainerRef = useRef<HTMLDivElement | null>(null);
   const uiManager = useUIManager();
   const newPlayerHook = useBooleanSetting(uiManager, Setting.NewPlayer);
@@ -182,6 +183,7 @@ export function GameWindowLayout({
             pluginsHook={pluginsHook}
             yourArtifactsHook={yourArtifactsHook}
             planetdexHook={planetdexHook}
+            notepadHook={notepadHook}
           />
           <CanvasWrapper>
             <ControllableCanvas />

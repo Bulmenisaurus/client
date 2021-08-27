@@ -43,6 +43,7 @@ const icon = (modal: ModalName): React.ReactNode => {
   else if (modal === ModalName.Plugins) return <PluginIcon />;
   else if (modal === ModalName.YourArtifacts) return <ArtifactIcon />;
   else if (modal === ModalName.WithdrawSilver) return <WithdrawIcon />;
+  else if (modal === ModalName.Notepad) return <span>N</span>;
   return <span>T</span>;
 };
 
@@ -408,6 +409,28 @@ export function ModalWithdrawIcon({
     <ModalToggleButton
       hook={hook}
       modal={ModalName.WithdrawSilver}
+      style={style}
+      shortcutKey={shortcutKey}
+      text={text}
+    />
+  );
+}
+
+export function ModalNotepadIcon({
+  hook,
+  text,
+  style,
+  shortcutKey,
+}: {
+  hook: ModalHook;
+  text?: string;
+  style?: React.CSSProperties;
+  shortcutKey?: string;
+}) {
+  return (
+    <ModalToggleButton
+      hook={hook}
+      modal={ModalName.Notepad}
       style={style}
       shortcutKey={shortcutKey}
       text={text}
