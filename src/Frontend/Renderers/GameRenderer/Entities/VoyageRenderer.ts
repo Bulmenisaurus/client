@@ -56,7 +56,7 @@ export default class VoyageRenderer {
 
       cR.queueCircleWorld(toLoc.coords, radius, color, 0.7, 1, true);
       tR.queueTextWorld(
-        `${Math.floor(voyage.energyArriving)} in ${Math.floor(timeLeft)}s`,
+        `${formatNumber(voyage.energyArriving)} in ${Math.floor(timeLeft)}s`,
         { x: toLoc.coords.x, y: toLoc.coords.y + radius },
         color,
         undefined,
