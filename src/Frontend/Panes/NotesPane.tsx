@@ -69,6 +69,12 @@ const convertRawDfText = (value: string) => {
   });
 };
 
+const saveNotes = (account: string, notes: string) => {
+  localStorage.setItem(`${account}-notes`, notes);
+};
+
+const loadNotes = (account: string) => localStorage.getItem(`${account}-notes`);
+
 export function NotesPane({ hook }: { hook: ModalHook }) {
   const default_notes_text = `First planet: <@${df.getMyPlanets()[0].locationId}>
 My largest planet: <@${
@@ -79,8 +85,17 @@ My largest planet: <@${
   }>
 `.trim();
 
-  const [code, setCode] = useState(default_notes_text);
+  const account = df.getAccount();
+  const loadedNote = account ? loadNotes(account) : null;
+
+  const [code, setCode] = useState(loadedNote ?? default_notes_text);
   const [showRaw, setShowRaw] = useState(true);
+
+  const saveCurrentNote = () => {
+    const account = df.getAccount();
+
+    if (account) saveNotes(account, code);
+  };
 
   return (
     <ModalPane hook={hook} title={'NotePad'} name={ModalName.Notepad}>
@@ -97,7 +112,10 @@ My largest planet: <@${
                 fontFamily: '"Fira code", "Fira Mono", monospace',
                 fontSize: 12,
               }}
-              onBlur={() => setShowRaw(false)}
+              onBlur={() => {
+                setShowRaw(false);
+                saveCurrentNote();
+              }}
             />
           ) : (
             // onDoubleClick because otherwise clicking on planets would be weird
