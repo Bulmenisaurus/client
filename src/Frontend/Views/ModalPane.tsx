@@ -41,6 +41,8 @@ export const enum ModalName {
   ManageAccount,
   Onboarding,
   Private,
+
+  Notepad,
 }
 
 function InformationSection({

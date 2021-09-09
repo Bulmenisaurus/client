@@ -120,6 +120,14 @@ export function PlanetNameLink({ planet }: { planet: Planet }) {
   return <CenterPlanetLink planet={planet}>{ProcgenUtils.getPlanetName(planet)}</CenterPlanetLink>;
 }
 
+export function ColoredPlanetNameLink({ planet }: { planet: Planet }) {
+  return (
+    <Colored color={ProcgenUtils.getPlayerColor(planet.owner)}>
+      <PlanetNameLink planet={planet} />
+    </Colored>
+  );
+}
+
 export function CenterChunkLink({ chunk, children }: { chunk: Chunk; children: React.ReactNode }) {
   return <Link onClick={() => Viewport.getInstance().centerChunk(chunk)}>{children}</Link>;
 }
@@ -137,3 +145,7 @@ export const Coords = ({ coords: { x, y } }: { coords: WorldCoords }) => (
     (<Text>{x}</Text>, <Text>{y}</Text>)
   </Sub>
 );
+
+export const FAIcon = styled.i`
+  vertical-align: super;
+`;
