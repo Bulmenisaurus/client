@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 import dfstyles from '../Styles/dfstyles';
+import { FAIcon } from './Text';
 
 const SVGWrapper = styled.span`
   width: 1em;
@@ -701,6 +702,14 @@ const DeactivateSVG = ({ color }: { color?: string }) => (
 export const DeactivateIcon = ({ color }: { color?: string }) => (
   <SVGWrapper>
     <DeactivateSVG color={color} />
+  </SVGWrapper>
+);
+
+export const NotesSVG = () => <FAIcon className='fas fa-sticky-note'></FAIcon>;
+
+export const NotesIcon = () => (
+  <SVGWrapper>
+    <NotesSVG />
   </SVGWrapper>
 );
 

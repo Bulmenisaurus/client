@@ -145,3 +145,7 @@ export const Coords = ({ coords: { x, y } }: { coords: WorldCoords }) => (
     (<Text>{x}</Text>, <Text>{y}</Text>)
   </Sub>
 );
+
+export const FAIcon = styled.i`
+  vertical-align: super;
+`;
