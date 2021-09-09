@@ -35,6 +35,7 @@ const NotesText = styled.div`
   padding: 10px;
   height: 500px;
   width: 500px;
+  line-height: 1;
 `;
 
 const highlightDfText = (text: string) => {
