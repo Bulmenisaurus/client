@@ -22,7 +22,6 @@ import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
 import { NotesPane } from '../Panes/NotesPane';
 import { PrivatePane } from '../Panes/PrivatePane';
 import { SettingsPane } from '../Panes/SettingsPane';
-import { Tooltip } from '../Panes/Tooltip';
 import { TutorialPane } from '../Panes/TutorialPane';
 import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
 import { ZoomPane } from '../Panes/ZoomPane';
@@ -72,6 +71,10 @@ export function GameWindowLayout({
     uiManager,
     Setting.TerminalVisible
   );
+
+  useEffect(() => {
+    uiManager.setOverlayContainer(modalsContainerRef);
+  }, [uiManager, modalsContainerRef]);
 
   const account = uiManager.getAccount();
   useEffect(() => {
@@ -154,8 +157,6 @@ export function GameWindowLayout({
           <TopBar twitterVerifyHook={twitterVerifyHook} />
         </BorderlessPane>
       </TopBarPaneContainer>
-
-      <Tooltip />
 
       {/* all modals rendered into here */}
       <div ref={modalsContainerRef}>
