@@ -816,7 +816,11 @@ class GameManager extends EventEmitter {
       });
 
     const unconfirmedTxs = await persistentChunkStore.getUnconfirmedSubmittedEthTxs();
-    const confirmationQueue = new ThrottledConcurrentQueue(10, 1000, 1);
+    const confirmationQueue = new ThrottledConcurrentQueue({
+      invocationIntervalMs: 1000,
+      maxInvocationsPerIntervalMs: 10,
+      maxConcurrency: 1,
+    });
 
     for (const unconfirmedTx of unconfirmedTxs) {
       // recommits the tx to storage but whatever
@@ -951,7 +955,7 @@ class GameManager extends EventEmitter {
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
+        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
@@ -966,7 +970,7 @@ class GameManager extends EventEmitter {
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
+        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
@@ -992,7 +996,7 @@ class GameManager extends EventEmitter {
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
+        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
