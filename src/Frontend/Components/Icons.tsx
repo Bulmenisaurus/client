@@ -5,11 +5,6 @@ import { createComponent } from '@lit-labs/react';
 import React from 'react';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-<<<<<<< HEAD
-import dfstyles from '../Styles/dfstyles';
-import { FAIcon } from './Text';
-=======
->>>>>>> 3d216fa88eba07cafcc083b15401e5662e04bf98
 
 // TODO: Decide if this is the best place to register the custom elements
 customElements.define(DarkForestIcon.tagName, DarkForestIcon);
@@ -23,20 +18,9 @@ export const Icon = createComponent(React, DarkForestIcon.tagName, DarkForestIco
 // Re-export the IconType abstract type & the "enum" object for easier access
 export { IconType } from '@darkforest_eth/ui';
 
-<<<<<<< HEAD
-export const NotesSVG = () => <FAIcon className='fas fa-sticky-note'></FAIcon>;
-
-export const NotesIcon = () => (
-  <SVGWrapper>
-    <NotesSVG />
-  </SVGWrapper>
-);
-
-=======
 // Utilities for calculating an Icon from some context.
 // I think these should be made into utilities that return the `IconType`
 // instead of an Icon JSXElement
->>>>>>> 3d216fa88eba07cafcc083b15401e5662e04bf98
 export const RankIcon = ({ planet }: { planet: Planet | undefined }) => {
   const rank = getPlanetRank(planet);
   if (isFullRank(planet)) return <Icon type={IconType.RankMax} />;
