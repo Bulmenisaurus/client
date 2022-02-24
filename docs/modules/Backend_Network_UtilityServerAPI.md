@@ -6,13 +6,17 @@
 
 - [EmailResponse](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)
 
-### Variables
+### Type aliases
 
-- [WEBSERVER_URL](Backend_Network_UtilityServerAPI.md#webserver_url)
+- [RegisterConfirmationResponse](Backend_Network_UtilityServerAPI.md#registerconfirmationresponse)
 
 ### Functions
 
+<<<<<<< HEAD
 - [callRegisterUntilWhitelisted](Backend_Network_UtilityServerAPI.md#callregisteruntilwhitelisted)
+=======
+- [callRegisterAndWaitForConfirmation](Backend_Network_UtilityServerAPI.md#callregisterandwaitforconfirmation)
+>>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 - [disconnectTwitter](Backend_Network_UtilityServerAPI.md#disconnecttwitter)
 - [getAllTwitters](Backend_Network_UtilityServerAPI.md#getalltwitters)
 - [requestDevFaucet](Backend_Network_UtilityServerAPI.md#requestdevfaucet)
@@ -22,15 +26,25 @@
 - [submitWhitelistKey](Backend_Network_UtilityServerAPI.md#submitwhitelistkey)
 - [tryGetAllTwitters](Backend_Network_UtilityServerAPI.md#trygetalltwitters)
 - [verifyTwitterHandle](Backend_Network_UtilityServerAPI.md#verifytwitterhandle)
+- [whitelistStatus](Backend_Network_UtilityServerAPI.md#whiteliststatus)
 
-## Variables
+## Type aliases
 
-### WEBSERVER_URL
+### RegisterConfirmationResponse
 
-• `Const` **WEBSERVER_URL**: `string`
+Ƭ **RegisterConfirmationResponse**: `Object`
+
+#### Type declaration
+
+| Name            | Type      | Description                                                                                              |
+| :-------------- | :-------- | :------------------------------------------------------------------------------------------------------- |
+| `canRetry?`     | `boolean` | If the whitelist registration is unsuccessful, this is true if the client is able to retry registration. |
+| `errorMessage?` | `string`  | If the whitelist registration is unsuccessful, this is populated with the error message explaining why.  |
+| `txHash?`       | `string`  | If the whitelist registration is successful, this is populated with the hash of the transaction.         |
 
 ## Functions
 
+<<<<<<< HEAD
 ### callRegisterUntilWhitelisted
 
 ▸ **callRegisterUntilWhitelisted**(`key`, `address`, `terminal`): `Promise`<`string` \| `undefined`\>
@@ -52,6 +66,26 @@ Attempts to register the given player into the game.
 #### Returns
 
 `Promise`<`string` \| `undefined`\>
+=======
+### callRegisterAndWaitForConfirmation
+
+▸ **callRegisterAndWaitForConfirmation**(`key`, `address`, `terminal`): `Promise`<[`RegisterConfirmationResponse`](Backend_Network_UtilityServerAPI.md#registerconfirmationresponse)\>
+
+Starts the registration process for the user then
+polls for success.
+
+#### Parameters
+
+| Name       | Type                                                                                                            |
+| :--------- | :-------------------------------------------------------------------------------------------------------------- |
+| `key`      | `string`                                                                                                        |
+| `address`  | `EthAddress`                                                                                                    |
+| `terminal` | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> |
+
+#### Returns
+
+`Promise`<[`RegisterConfirmationResponse`](Backend_Network_UtilityServerAPI.md#registerconfirmationresponse)\>
+>>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 ---
 
@@ -73,11 +107,11 @@ Attempts to register the given player into the game.
 
 ### getAllTwitters
 
-▸ `Const` **getAllTwitters**(): `Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+▸ `Const` **getAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 #### Returns
 
-`Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+`Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 ---
 
@@ -149,7 +183,12 @@ Attempts to register the given player into the game.
 
 ▸ `Const` **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `RegisterResponse`\>
 
+<<<<<<< HEAD
 Submits a whitelist key to register the given player to the game.
+=======
+Submits a whitelist key to register the given player to the game. Returns null if there was an
+error.
+>>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 #### Parameters
 
@@ -166,14 +205,14 @@ Submits a whitelist key to register the given player to the game.
 
 ### tryGetAllTwitters
 
-▸ `Const` **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+▸ `Const` **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 Swallows all errors. Either loads the address to twitter map from the webserver in 5 seconds, or
 returan empty map.
 
 #### Returns
 
-`Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+`Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 ---
 
@@ -190,3 +229,19 @@ returan empty map.
 #### Returns
 
 `Promise`<`boolean`\>
+
+---
+
+### whitelistStatus
+
+▸ `Const` **whitelistStatus**(`address`): `Promise`<`null` \| `WhitelistStatusResponse`\>
+
+#### Parameters
+
+| Name      | Type         |
+| :-------- | :----------- |
+| `address` | `EthAddress` |
+
+#### Returns
+
+`Promise`<`null` \| `WhitelistStatusResponse`\>
