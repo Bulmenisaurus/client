@@ -67,25 +67,3 @@ export function ModalToggleButton({
     </MaybeShortcutButton>
   );
 }
-
-export function ModalNotepadIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.Notepad}
-      style={style}
-      shortcutKey={shortcutKey}
-      text={text}
-    />
-  );
-}

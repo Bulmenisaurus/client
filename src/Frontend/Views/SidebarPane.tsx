@@ -11,7 +11,6 @@ import {
   TOGGLE_TRANSACTIONS_PANE,
   TOGGLE_YOUR_ARTIFACTS_PANE,
   TOGGLE_YOUR_PLANETS_DEX_PANE,
-  TOGGLE_NOTEPAD_PANE,
 } from '../Utils/ShortcutConstants';
 import { ModalToggleButton } from './ModalIcon';
 
@@ -90,17 +89,6 @@ export function SidebarPane({
           size='stretch'
           shortcutKey={TOGGLE_TRANSACTIONS_PANE}
           shortcutText={sidebarHovered ? TOGGLE_TRANSACTIONS_PANE : undefined}
-        />
-        <EmSpacer height={0.5} />
-        <ModalNotepadIcon
-          hook={notepadHook}
-          style={{
-            width: '100%',
-            height: '2em',
-            padding: '4px 8px',
-          }}
-          text={sidebarHovered ? 'Notepad' : undefined}
-          shortcutKey={sidebarHovered ? TOGGLE_NOTEPAD_PANE : undefined}
         />
       </BorderlessPane>
     </WindowTogglesPaneContainer>

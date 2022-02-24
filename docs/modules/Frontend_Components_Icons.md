@@ -57,11 +57,7 @@
 
 ### Icon
 
-<<<<<<< HEAD
-• `Const` **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
-=======
 • **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 ---
 
@@ -76,15 +72,6 @@
 | `Activate`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Artifact`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Broadcast`    | [`IconType`](Frontend_Components_Icons.md#icontype) |
-<<<<<<< HEAD
-| `Deactivate`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Defense`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Deposit`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Energy`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `EnergyGrowth` | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Hat`          | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Help`         | [`IconType`](Frontend_Components_Icons.md#icontype) |
-=======
 | `Capturable`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Check`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Deactivate`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
@@ -98,7 +85,6 @@
 | `Hat`          | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Help`         | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Invadable`    | [`IconType`](Frontend_Components_Icons.md#icontype) |
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 | `Leaderboard`  | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Lock`         | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `MaxLevel`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
@@ -114,23 +100,13 @@
 | `RankOne`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `RankThree`    | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `RankTwo`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
-<<<<<<< HEAD
-=======
 | `Refresh`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 | `RightArrow`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Settings`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Share`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Silver`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `SilverGrowth` | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `SilverProd`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
-<<<<<<< HEAD
-| `Speed`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Target`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Twitter`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Upgrade`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
-| `Withdraw`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
-=======
 | `Sparkles`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Speed`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Target`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
@@ -139,7 +115,6 @@
 | `Upgrade`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `Withdraw`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
 | `X`            | [`IconType`](Frontend_Components_Icons.md#icontype) |
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 ## Functions
 
@@ -599,17 +574,10 @@
 
 #### Parameters
 
-<<<<<<< HEAD
-| Name                     | Type                                                       |
-| :----------------------- | :--------------------------------------------------------- |
-| `__namedParameters`      | `Object`                                                   |
-| `__namedParameters.stat` | [`StatIdx`](../enums/_types_global_GlobalTypes.StatIdx.md) |
-=======
 | Name                     | Type                                                      |
 | :----------------------- | :-------------------------------------------------------- |
 | `__namedParameters`      | `Object`                                                  |
 | `__namedParameters.stat` | [`StatIdx`](../enums/types_global_GlobalTypes.StatIdx.md) |
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 #### Returns
 

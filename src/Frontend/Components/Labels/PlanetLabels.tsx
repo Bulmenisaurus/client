@@ -64,12 +64,12 @@ export function GrowthText({
 
 const getSilver = (p: Planet) => p.silver;
 export const SilverText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilver} />
+  <StatText planet={planet} getStat={getSilver} />
 );
 
 const getSilverCap = (p: Planet) => p.silverCap;
 export const SilverCapText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilverCap} />
+  <StatText planet={planet} getStat={getSilverCap} />
 );
 
 const getEnergy = (p: Planet) => p.energy;

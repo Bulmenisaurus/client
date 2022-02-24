@@ -419,13 +419,7 @@ Handle to an interval that periodically refreshes the network's health from our 
 
 ### paused$
 
-<<<<<<< HEAD
-• `Private` **networkHealthInterval**: `Timer`
-
-Handle to an interval that periodically refreshes the network's health from our webserver.
-=======
 • **paused$**: `Monomitter`<`boolean`\>
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 ---
 

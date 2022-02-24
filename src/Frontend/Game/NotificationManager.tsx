@@ -391,7 +391,6 @@ class NotificationManager extends EventEmitter {
     );
   }
   planetAttacked(planet: LocatablePlanet): void {
-    new Audio('public/audio/Pew.mp3').play();
     this.notify(
       NotificationType.PlanetAttacked,
       <span>

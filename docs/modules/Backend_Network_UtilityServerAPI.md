@@ -12,11 +12,7 @@
 
 ### Functions
 
-<<<<<<< HEAD
-- [callRegisterUntilWhitelisted](Backend_Network_UtilityServerAPI.md#callregisteruntilwhitelisted)
-=======
 - [callRegisterAndWaitForConfirmation](Backend_Network_UtilityServerAPI.md#callregisterandwaitforconfirmation)
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 - [disconnectTwitter](Backend_Network_UtilityServerAPI.md#disconnecttwitter)
 - [getAllTwitters](Backend_Network_UtilityServerAPI.md#getalltwitters)
 - [requestDevFaucet](Backend_Network_UtilityServerAPI.md#requestdevfaucet)
@@ -44,29 +40,6 @@
 
 ## Functions
 
-<<<<<<< HEAD
-### callRegisterUntilWhitelisted
-
-▸ **callRegisterUntilWhitelisted**(`key`, `address`, `terminal`): `Promise`<`string` \| `undefined`\>
-
-Attempts to register the given player into the game.
-
-- if the key is invalid, returns `undefined`
-- if there is an error submitting the whitelist key, indicated by a null response, or if the
-  response is not successful, tries again, until it succeeds.
-
-#### Parameters
-
-| Name       | Type                                                                                                                  |
-| :--------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `key`      | `string`                                                                                                              |
-| `address`  | `EthAddress`                                                                                                          |
-| `terminal` | `React.MutableRefObject`<[`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md) \| `undefined`\> |
-
-#### Returns
-
-`Promise`<`string` \| `undefined`\>
-=======
 ### callRegisterAndWaitForConfirmation
 
 ▸ **callRegisterAndWaitForConfirmation**(`key`, `address`, `terminal`): `Promise`<[`RegisterConfirmationResponse`](Backend_Network_UtilityServerAPI.md#registerconfirmationresponse)\>
@@ -85,7 +58,6 @@ polls for success.
 #### Returns
 
 `Promise`<[`RegisterConfirmationResponse`](Backend_Network_UtilityServerAPI.md#registerconfirmationresponse)\>
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 ---
 
@@ -183,12 +155,8 @@ polls for success.
 
 ▸ `Const` **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `RegisterResponse`\>
 
-<<<<<<< HEAD
-Submits a whitelist key to register the given player to the game.
-=======
 Submits a whitelist key to register the given player to the game. Returns null if there was an
 error.
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 #### Parameters
 

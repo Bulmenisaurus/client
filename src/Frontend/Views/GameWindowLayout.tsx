@@ -21,7 +21,6 @@ import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { PlanetDexPane } from '../Panes/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
 import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
-import { NotesPane } from '../Panes/NotesPane';
 import { PrivatePane } from '../Panes/PrivatePane';
 import { SettingsPane } from '../Panes/SettingsPane';
 import { TransactionLogPane } from '../Panes/TransactionLogPane';

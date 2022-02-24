@@ -47,17 +47,8 @@ reading and writing to and from the blockchain.
 - [getArrival](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrival)
 - [getArrivalsForPlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrivalsforplanet)
 - [getArtifactById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getartifactbyid)
-<<<<<<< HEAD
-- [getClaimedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedcoordsbyidifexists)
-- [getClaimedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedplanetscoords)
 - [getConstants](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getconstants)
 - [getContractAddress](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractaddress)
-- [getGPTCreditBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditbalance)
-- [getGPTCreditPriceEther](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditpriceether)
-=======
-- [getConstants](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getconstants)
-- [getContractAddress](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractaddress)
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 - [getGasFeeForTransaction](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgasfeefortransaction)
 - [getIsPaused](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getispaused)
 - [getPlanetById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplanetbyid)
@@ -381,43 +372,6 @@ game - these {@code ContractsAPIEvent} events.
 
 ---
 
-<<<<<<< HEAD
-### getClaimedCoordsByIdIfExists
-
-▸ **getClaimedCoordsByIdIfExists**(`planetId`): `Promise`<`undefined` \| `ClaimedCoords`\>
-
-#### Parameters
-
-| Name       | Type         |
-| :--------- | :----------- |
-| `planetId` | `LocationId` |
-
-#### Returns
-
-`Promise`<`undefined` \| `ClaimedCoords`\>
-
----
-
-### getClaimedPlanetsCoords
-
-▸ **getClaimedPlanetsCoords**(`startingAt`, `onProgressIds?`, `onProgressCoords?`): `Promise`<`ClaimedCoords`[]\>
-
-#### Parameters
-
-| Name                | Type                                      |
-| :------------------ | :---------------------------------------- |
-| `startingAt`        | `number`                                  |
-| `onProgressIds?`    | (`fractionCompleted`: `number`) => `void` |
-| `onProgressCoords?` | (`fractionCompleted`: `number`) => `void` |
-
-#### Returns
-
-`Promise`<`ClaimedCoords`[]\>
-
----
-
-=======
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 ### getConstants
 
 ▸ **getConstants**(): `Promise`<[`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)\>
@@ -438,13 +392,9 @@ game - these {@code ContractsAPIEvent} events.
 
 ---
 
-<<<<<<< HEAD
-### getGPTCreditBalance
-=======
 ### getGasFeeForTransaction
 
 ▸ `Private` **getGasFeeForTransaction**(`tx`): `string` \| `AutoGasSetting`
->>>>>>> 0311cefdc1bbcf80361410eca9e564382210a819
 
 We pass this function into {@link TxExecutor} to calculate what gas fee we should use for the
 given transaction. The result is either a number, measured in gwei, represented as a string, or
