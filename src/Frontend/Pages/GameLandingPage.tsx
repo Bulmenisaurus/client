@@ -3,6 +3,7 @@ import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { DarkForest } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
+import { EthAddress } from '@darkforest_eth/types';
 import { utils, Wallet } from 'ethers';
 import { reverse } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -12,6 +13,7 @@ import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
 import { getEthConnection, loadDiamondContract } from '../../Backend/Network/Blockchain';
+import { addLobby, getLobbies } from '../../Backend/Network/LobbyManager';
 import {
   callRegisterAndWaitForConfirmation,
   EmailResponse,
@@ -56,6 +58,9 @@ const enum TerminalPromptStep {
   COMPLETE,
   TERMINATED,
   ERROR,
+  JOIN_LOBBY,
+  DISPLAY_LOBBIES,
+  IMPORT_LOBBY,
 }
 
 export function GameLandingPage({ match, location }: RouteComponentProps<{ contract: string }>) {
@@ -270,6 +275,8 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       terminal.current?.println(`Generate new burner wallet account.`);
       terminal.current?.print('(i) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Import private key.`);
+      terminal.current?.print('(l) ', TerminalTextStyle.Sub);
+      terminal.current?.println(`Join a lobby`);
       terminal.current?.println(``);
       terminal.current?.println(`Select an option:`, TerminalTextStyle.Text);
 
@@ -304,6 +311,8 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           setStep(TerminalPromptStep.GENERATE_ACCOUNT);
         } else if (userInput === 'i') {
           setStep(TerminalPromptStep.IMPORT_ACCOUNT);
+        } else if (userInput === 'l') {
+          setStep(TerminalPromptStep.JOIN_LOBBY);
         } else {
           terminal.current?.println('Unrecognized input. Please try again.');
           await advanceStateFromCompatibilityPassed(terminal);
@@ -833,6 +842,94 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     await neverResolves();
   }, []);
 
+  const advanceStateFromDisplayLobbies = useCallback(
+    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
+      terminal.current?.println(``);
+      const lobbies = getLobbies();
+      for (let i = 0; i < lobbies.length; i += 1) {
+        terminal.current?.print(`(${i + 1}): `, TerminalTextStyle.Sub);
+        terminal.current?.print(`${lobbies[i].name} `, TerminalTextStyle.Text);
+        terminal.current?.printElement(
+          <TextPreview text={lobbies[i].address} unFocusedWidth='70px' />
+        ),
+          TerminalTextStyle.Sub;
+      }
+      terminal.current?.println(``);
+      terminal.current?.println(`Select a lobby:`, TerminalTextStyle.Text);
+
+      const selection = +((await terminal.current?.getInput()) || '');
+      if (isNaN(selection) || selection > lobbies.length) {
+        terminal.current?.println('Unrecognized input. Please try again.');
+        await advanceStateFromDisplayLobbies(terminal);
+      } else {
+        const lobby = lobbies[selection - 1];
+        try {
+          window.location.href = `${window.location.origin}/play/${lobby.address}`;
+        } catch (e) {
+          terminal.current?.println(
+            'An unknown error occurred. please try again.',
+            TerminalTextStyle.Red
+          );
+        }
+      }
+    },
+    []
+  );
+  const advanceStateFromJoinLobby = useCallback(
+    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
+      const lobbies = getLobbies();
+      terminal.current?.println(`Found ${lobbies.length} lobbies on this device.`);
+      terminal.current?.println(``);
+
+      if (lobbies.length > 0) {
+        terminal.current?.print('(a) ', TerminalTextStyle.Sub);
+        terminal.current?.println('Join a lobby');
+      }
+      terminal.current?.print('(i) ', TerminalTextStyle.Sub);
+      terminal.current?.println(`Import a lobby address.`);
+      terminal.current?.println(``);
+      terminal.current?.println(`Select an option:`, TerminalTextStyle.Text);
+
+      const userInput = await terminal.current?.getInput();
+      if (userInput === 'a' && lobbies.length > 0) {
+        setStep(TerminalPromptStep.DISPLAY_LOBBIES);
+      } else if (userInput === 'i') {
+        setStep(TerminalPromptStep.IMPORT_LOBBY);
+      } else {
+        terminal.current?.println('Unrecognized input. Please try again.');
+        await advanceStateFromJoinLobby(terminal);
+      }
+    },
+    [isLobby, ethConnection, selectedAddress]
+  );
+
+  const advanceStateFromImportLobby = useCallback(
+    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
+      terminal.current?.println(
+        'Enter the 0x-account of the lobby you wish to import:',
+        TerminalTextStyle.Text
+      );
+
+      const newLobbyAddress = (await terminal.current?.getInput()) || '';
+
+      terminal.current?.println('Enter the name of your lobby:', TerminalTextStyle.Text);
+
+      const defaultName = `Lobby ${getLobbies().length + 1}`;
+      const newLobbyName = (await terminal.current?.getInput()) || defaultName;
+      try {
+        addLobby(newLobbyAddress as EthAddress, newLobbyName);
+        terminal.current?.println(`Imported lobby with address ${newLobbyAddress}.`);
+        setStep(TerminalPromptStep.DISPLAY_LOBBIES);
+      } catch (e) {
+        terminal.current?.println(
+          'An unknown error occurred. please try again.',
+          TerminalTextStyle.Red
+        );
+      }
+    },
+    [ethConnection]
+  );
+
   const advanceState = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       if (step === TerminalPromptStep.NONE && ethConnection) {
@@ -869,6 +966,12 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         await advanceStateFromComplete(terminal);
       } else if (step === TerminalPromptStep.ERROR) {
         await advanceStateFromError();
+      } else if (step === TerminalPromptStep.JOIN_LOBBY) {
+        await advanceStateFromJoinLobby(terminal);
+      } else if (step === TerminalPromptStep.DISPLAY_LOBBIES) {
+        await advanceStateFromDisplayLobbies(terminal);
+      } else if (step === TerminalPromptStep.IMPORT_LOBBY) {
+        await advanceStateFromImportLobby(terminal);
       }
     },
     [
