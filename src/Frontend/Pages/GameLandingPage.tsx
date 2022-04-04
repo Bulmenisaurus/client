@@ -853,6 +853,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           <TextPreview text={lobbies[i].address} unFocusedWidth='70px' />
         ),
           TerminalTextStyle.Sub;
+        terminal.current?.println(``);
       }
       terminal.current?.println(``);
       terminal.current?.println(`Select a lobby:`, TerminalTextStyle.Text);
