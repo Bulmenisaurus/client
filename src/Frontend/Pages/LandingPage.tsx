@@ -63,7 +63,7 @@ export default function LandingPage() {
 
             <ButtonWrapper>
               <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
-                Create Arena!!
+                Create Arena
               </Btn>
             </ButtonWrapper>
           </Header>
@@ -244,8 +244,7 @@ const VariousLinksContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(to right bottom, #511111, #5b0023, #5d003c, #510659, #262077);
-  background-position: 50%, 50%;
+  background-image: linear-gradient(to right bottom, #511111, #5b0023, #5d003c, #510659, #262077);  background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
   top: 0;
