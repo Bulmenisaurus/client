@@ -16,6 +16,8 @@ import { ModalToggleButton } from './ModalIcon';
 import { NetworkHealth } from './NetworkHealth';
 import { Paused } from './Paused';
 import { Gameover } from './Gameover';
+import { TextPreview } from '../Components/TextPreview';
+import { lobbyAddressMnemonic } from '../Utils/LobbyUtils';
 
 const TopBarContainer = styled.div`
   z-index: ${DFZIndex.MenuBar};
@@ -194,6 +196,13 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
           extraContent={<Text>Your burner wallet address.</Text>}
         >
           <AccountLabel includeAddressIfHasTwitter={true} width={'50px'} />
+        </TooltipTrigger>
+        <TooltipTrigger name={TooltipName.Empty} extraContent={<Text>The name of the lobby</Text>}>
+          <TextPreview
+            text={lobbyAddressMnemonic(df.getContractAddress()).mnemonic}
+            unFocusedWidth='120px'
+            focusedWidth='120px'
+          />
         </TooltipTrigger>
         <TooltipTrigger
           name={TooltipName.Empty}

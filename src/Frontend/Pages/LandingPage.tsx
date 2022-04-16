@@ -1,11 +1,12 @@
 import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { address } from '@darkforest_eth/serde';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
+import { JoinLobby } from '../Components/JoinLobby';
 import { Modal } from '../Components/Modal';
 import { HideSmall, Red, Sub, Text, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
@@ -40,10 +41,12 @@ const ButtonWrapper = styled.div`
 
 export default function LandingPage() {
   const history = useHistory();
+  const [joinLobbyModalOpen, setJoinLobbyModalOpen] = useState(false);
 
   return (
     <>
       <PrettyOverlayGradient />
+      {joinLobbyModalOpen && <JoinLobbyModal />}
       {/* <Hiring /> */}
 
       <Page>
@@ -64,6 +67,14 @@ export default function LandingPage() {
             <ButtonWrapper>
               <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
                 Create Arena
+              </Btn>
+              <Btn
+                size='large'
+                onClick={() => {
+                  setJoinLobbyModalOpen(!joinLobbyModalOpen);
+                }}
+              >
+                Join Lobby
               </Btn>
             </ButtonWrapper>
           </Header>
@@ -360,6 +371,17 @@ function Hiring() {
           here
         </Link>
         .
+      </div>
+    </Modal>
+  );
+}
+
+function JoinLobbyModal() {
+  return (
+    <Modal contain={['top', 'left', 'right']} initialX={100} initialY={100}>
+      <Title slot='title'>Join Lobby</Title>
+      <div style={{ width: '12em', textAlign: 'justify' }}>
+        Lobby name/address: <JoinLobby />
       </div>
     </Modal>
   );

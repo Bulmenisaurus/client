@@ -30,6 +30,7 @@ import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { TextPreview } from '../Components/TextPreview';
 import { TopLevelDivProvider, UIManagerProvider } from '../Utils/AppHooks';
 import { Incompatibility, unsupportedFeatures } from '../Utils/BrowserChecks';
+import { lobbyAddressMnemonic } from '../Utils/LobbyUtils';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import { GameWindowLayout } from '../Views/GameWindowLayout';
@@ -71,7 +72,13 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
   const [ethConnection, setEthConnection] = useState<EthConnection | undefined>();
   const [step, setStep] = useState(TerminalPromptStep.NONE);
 
-  const contractAddress = address(match.params.contract);
+  const { address: _lobbyAddress, mnemonic } = lobbyAddressMnemonic(match.params.contract);
+
+  if (match.params.contract.startsWith('0x')) {
+    history.replace(`/play/${mnemonic}`);
+  }
+
+  const contractAddress = address(_lobbyAddress);
   const isLobby = contractAddress !== address(CONTRACT_ADDRESS);
 
   useEffect(() => {

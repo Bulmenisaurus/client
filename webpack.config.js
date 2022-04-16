@@ -6,6 +6,7 @@ dotenv.config();
 const { EnvironmentPlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 //const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
@@ -33,6 +34,9 @@ module.exports = {
     extensions: ['.ts', '.tsx', '...'],
     // Used to reference packages in the monorepo by their package name
     symlinks: false,
+    alias: {
+      'stream': require.resolve('stream-browserify')
+    }
   },
 
   module: {
@@ -106,5 +110,6 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: 'public', to: 'public' }],
     }),
+    new NodePolyfillPlugin()
   ],
 };
