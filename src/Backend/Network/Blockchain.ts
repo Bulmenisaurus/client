@@ -22,11 +22,11 @@ export function getEthConnection(): Promise<EthConnection> {
 
   let url: string;
 
-  if (isProd) {
-    url = localStorage.getItem('XDAI_RPC_ENDPOINT_v5') || defaultUrl;
-  } else {
-    url = 'http://localhost:8545';
-  }
+  // if (isProd) {
+  url = localStorage.getItem('XDAI_RPC_ENDPOINT_v5') || defaultUrl;
+  // } else {
+  // url = 'http://localhost:8545';
+  // }
 
   console.log(`GAME METADATA:`);
   console.log(`rpc url: ${url}`);

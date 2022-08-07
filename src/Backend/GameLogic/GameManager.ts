@@ -577,7 +577,8 @@ class GameManager extends EventEmitter {
       throw new Error('you must pass in a handle to a terminal');
     }
 
-    const account = connection.getAddress();
+    // hopefully this doesn't make df rpc explode or anything like that
+    const account = <EthAddress>'0x0000000000000000000000000000000000000001';
 
     if (!account) {
       throw new Error('no account on eth connection');
@@ -1918,6 +1919,9 @@ class GameManager extends EventEmitter {
    * Attempts to join the game. Should not be called once you've already joined.
    */
   public async joinGame(beforeRetry: (e: Error) => Promise<boolean>): Promise<void> {
+    this.initMiningManager({ x: 0, y: 0 });
+    this.emit(GameManagerEvent.InitializedPlayer);
+    return;
     try {
       if (this.checkGameHasEnded()) {
         throw new Error('game has ended');
@@ -1959,27 +1963,27 @@ class GameManager extends EventEmitter {
 
       this.terminal.current?.println('INIT: proving that planet exists', TerminalTextStyle.Sub);
 
-      this.initMiningManager(planet.location.coords); // get an early start
+      // this.initMiningManager(planet.location.coords); // get an early start
 
       // if player initialization causes an error, give the caller an opportunity
       // to resolve that error. if the asynchronous `beforeRetry` function returns
       // true, retry initializing the player. if it returns false, or if the
       // `beforeRetry` is undefined, then don't retry and throw an exception.
-      while (true) {
-        try {
-          const tx = await this.contractsAPI.submitTransaction(txIntent);
-          await tx.confirmedPromise;
-          break;
-        } catch (e) {
-          if (beforeRetry) {
-            if (await beforeRetry(e)) {
-              continue;
-            }
-          } else {
-            throw e;
-          }
-        }
-      }
+      // while (true) {
+      //   try {
+      //     const tx = await this.contractsAPI.submitTransaction(txIntent);
+      //     await tx.confirmedPromise;
+      //     break;
+      //   } catch (e) {
+      //     if (beforeRetry) {
+      //       if (await beforeRetry(e)) {
+      //         continue;
+      //       }
+      //     } else {
+      //       throw e;
+      //     }
+      //   }
+      // }
 
       await this.getSpaceships();
       await this.hardRefreshPlanet(planet.locationId);
