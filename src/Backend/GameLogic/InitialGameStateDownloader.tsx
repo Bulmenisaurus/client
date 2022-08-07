@@ -69,9 +69,7 @@ export class InitialGameStateDownloader {
      * In development we use the same contract address every time we deploy,
      * so storage is polluted with the IDs of old universes.
      */
-    const storedTouchedPlanetIds = isDev
-      ? []
-      : await persistentChunkStore.getSavedTouchedPlanetIds();
+    const storedTouchedPlanetIds: LocationId[] = isDev ? [] : [];
     const storedRevealedCoords = isDev ? [] : await persistentChunkStore.getSavedRevealedCoords();
 
     this.terminal.printElement(<DarkForestTips tips={tips} />);
@@ -94,92 +92,39 @@ export class InitialGameStateDownloader {
     const contractConstants = contractsAPI.getConstants();
     const worldRadius = contractsAPI.getWorldRadius();
 
-    const players = contractsAPI.getPlayers(playersLoadingBar);
+    const players = Promise.resolve(new Map<string, Player>());
+    playersLoadingBar(100);
 
     const arrivals: Map<VoyageId, QueuedArrival> = new Map();
     const planetVoyageIdMap: Map<LocationId, VoyageId[]> = new Map();
 
     const minedChunks = Array.from(await persistentChunkStore.allChunks());
-    const minedPlanetIds = new Set(
-      _.flatMap(minedChunks, (c) => c.planetLocations).map((l) => l.hash)
-    );
+    const minedPlanetIds: Set<LocationId[]> = new Set();
 
-    const loadedTouchedPlanetIds = contractsAPI.getTouchedPlanetIds(
-      storedTouchedPlanetIds.length,
-      planetIdsLoadingBar
-    );
+    const loadedTouchedPlanetIds: Promise<LocationId[]> = Promise.resolve([]);
 
-    const loadedRevealedCoords = contractsAPI.getRevealedPlanetsCoords(
-      storedRevealedCoords.length,
-      revealedPlanetsLoadingBar,
-      revealedPlanetsCoordsLoadingBar
-    );
+    const loadedRevealedCoords: Promise<RevealedCoords[]> = Promise.resolve([]);
     const claimedCoordsMap = new Map<LocationId, ClaimedCoords>();
 
     const allTouchedPlanetIds = storedTouchedPlanetIds.concat(await loadedTouchedPlanetIds);
     const allRevealedCoords = storedRevealedCoords.concat(await loadedRevealedCoords);
     const revealedCoordsMap = new Map<LocationId, RevealedCoords>();
-    for (const revealedCoords of allRevealedCoords) {
-      revealedCoordsMap.set(revealedCoords.hash, revealedCoords);
-    }
 
-    let planetsToLoad = allTouchedPlanetIds.filter(
-      (id) => minedPlanetIds.has(id) || revealedCoordsMap.has(id) || claimedCoordsMap.has(id)
-    );
+    let planetsToLoad: LocationId[] = [];
 
-    const pendingMoves = await contractsAPI.getAllArrivals(planetsToLoad, pendingMovesLoadingBar);
+    const pendingMoves: QueuedArrival[] = [];
 
-    // add origin points of voyages to known planets, because we need to know origin owner to render
-    // the shrinking / incoming circle
-    for (const arrival of pendingMoves) {
-      planetsToLoad.push(arrival.fromPlanet);
-    }
-    planetsToLoad = [...new Set(planetsToLoad)];
-
-    const touchedAndLocatedPlanets = await contractsAPI.bulkGetPlanets(
-      planetsToLoad,
-      planetsLoadingBar,
-      planetsMetadataLoadingBar
-    );
-
-    touchedAndLocatedPlanets.forEach((_planet, locId) => {
-      if (touchedAndLocatedPlanets.has(locId)) {
-        planetVoyageIdMap.set(locId, []);
-      }
-    });
-
-    for (const arrival of pendingMoves) {
-      const voyageIds = planetVoyageIdMap.get(arrival.toPlanet);
-      if (voyageIds) {
-        voyageIds.push(arrival.eventId);
-        planetVoyageIdMap.set(arrival.toPlanet, voyageIds);
-      }
-      arrivals.set(arrival.eventId, arrival);
-    }
+    const touchedAndLocatedPlanets: Map<LocationId, Planet> = new Map();
 
     const artifactIdsOnVoyages: ArtifactId[] = [];
-    for (const arrival of pendingMoves) {
-      if (arrival.artifactId) {
-        artifactIdsOnVoyages.push(arrival.artifactId);
-      }
-    }
 
-    const artifactsOnVoyages = await contractsAPI.bulkGetArtifacts(
-      artifactIdsOnVoyages,
-      artifactsInFlightLoadingBar
-    );
+    const artifactsOnVoyages: Artifact[] = [];
 
-    const heldArtifacts = contractsAPI.bulkGetArtifactsOnPlanets(
-      planetsToLoad,
-      artifactsOnPlanetsLoadingBar
-    );
-    const myArtifacts = contractsAPI.getPlayerArtifacts(
-      contractsAPI.getAddress(),
-      yourArtifactsLoadingBar
-    );
+    const heldArtifacts: Promise<Artifact[][]> = Promise.resolve([]);
+    const myArtifacts: Promise<Artifact[]> = Promise.resolve([]);
 
     const twitters = await tryGetAllTwitters();
-    const paused = contractsAPI.getIsPaused();
+    const paused = false;
 
     const initialState: InitialGameState = {
       contractConstants: await contractConstants,
