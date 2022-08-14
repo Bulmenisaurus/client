@@ -1,5 +1,11 @@
-import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
+import {
+  EMPTY_ADDRESS,
+  EMPTY_LOCATION_ID,
+  MAX_PLANET_LEVEL,
+  MIN_PLANET_LEVEL,
+} from '@darkforest_eth/constants';
 import { DarkForest } from '@darkforest_eth/contracts/typechain';
+import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
 import {
   aggregateBulkGetter,
   ContractCaller,
@@ -28,19 +34,26 @@ import {
   ArtifactId,
   ArtifactType,
   AutoGasSetting,
+  Biome,
   DiagnosticUpdater,
   EthAddress,
+  LocatablePlanet,
   LocationId,
   Planet,
+  PlanetLevel,
+  PlanetType,
   Player,
   QueuedArrival,
   RevealedCoords,
   Setting,
+  SpaceType,
   Transaction,
   TransactionId,
   TxIntent,
   VoyageId,
+  WorldLocation,
 } from '@darkforest_eth/types';
+import bigInt from 'big-integer';
 import { BigNumber as EthersBN, ContractFunction, Event, providers } from 'ethers';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
@@ -756,6 +769,272 @@ export class ContractsAPI extends EventEmitter {
       }
     }
     return planets;
+  }
+
+  public async planetLevelFromHexPerlin(hex: LocationId, perlin: number): Promise<PlanetLevel> {
+    const contractConstants = await this.getConstants();
+    const spaceType = await this.spaceTypeFromPerlin(perlin);
+
+    const levelBigInt = getBytesFromHex(hex, 4, 7);
+
+    let ret = MIN_PLANET_LEVEL;
+
+    for (let type = MAX_PLANET_LEVEL; type >= MIN_PLANET_LEVEL; type--) {
+      if (levelBigInt < bigInt(contractConstants.planetLevelThresholds[type])) {
+        ret = type;
+        break;
+      }
+    }
+
+    if (spaceType === SpaceType.NEBULA && ret > PlanetLevel.FOUR) {
+      ret = PlanetLevel.FOUR;
+    }
+    if (spaceType === SpaceType.SPACE && ret > PlanetLevel.FIVE) {
+      ret = PlanetLevel.FIVE;
+    }
+    if (ret > contractConstants.MAX_NATURAL_PLANET_LEVEL) {
+      ret = contractConstants.MAX_NATURAL_PLANET_LEVEL as PlanetLevel;
+    }
+
+    return ret;
+  }
+
+  public async spaceTypeFromPerlin(perlin: number): Promise<SpaceType> {
+    const contractConstants = await this.getConstants();
+    if (perlin < contractConstants.PERLIN_THRESHOLD_1) {
+      return SpaceType.NEBULA;
+    } else if (perlin < contractConstants.PERLIN_THRESHOLD_2) {
+      return SpaceType.SPACE;
+    } else if (perlin < contractConstants.PERLIN_THRESHOLD_3) {
+      return SpaceType.DEEP_SPACE;
+    } else {
+      return SpaceType.DEAD_SPACE;
+    }
+  }
+
+  public static getSilverNeeded(planet: Planet): number {
+    const totalLevel = planet.upgradeState.reduce((a, b) => a + b);
+    return (totalLevel + 1) * 0.2 * planet.silverCap;
+  }
+
+  public static planetCanUpgrade(planet: Planet): boolean {
+    const totalRank = planet.upgradeState.reduce((a, b) => a + b);
+    if (planet.spaceType === SpaceType.NEBULA && totalRank >= 3) return false;
+    if (planet.spaceType === SpaceType.SPACE && totalRank >= 4) return false;
+    if (planet.spaceType === SpaceType.DEEP_SPACE && totalRank >= 5) return false;
+    if (planet.spaceType === SpaceType.DEAD_SPACE && totalRank >= 5) return false;
+    return (
+      planet.planetLevel !== 0 &&
+      planet.planetType === PlanetType.PLANET &&
+      planet.silver >= this.getSilverNeeded(planet)
+    );
+  }
+
+  public async planetTypeFromHexPerlin(hex: LocationId, perlin: number): Promise<PlanetType> {
+    // level must be sufficient - too low level planets have 0 silver growth
+    const planetLevel = await this.planetLevelFromHexPerlin(hex, perlin);
+    const contractConstants = await this.getConstants();
+
+    const spaceType = await this.spaceTypeFromPerlin(perlin);
+    const weights = contractConstants.PLANET_TYPE_WEIGHTS[spaceType][planetLevel];
+    const weightSum = weights.reduce((x, y) => x + y);
+    let thresholds = [weightSum - weights[0]];
+    for (let i = 1; i < weights.length; i++) {
+      thresholds.push(thresholds[i - 1] - weights[i]);
+    }
+    thresholds = thresholds.map((x) => Math.floor((x * 256) / weightSum));
+    const typeByte = Number(getBytesFromHex(hex, 8, 9));
+    for (let i = 0; i < thresholds.length; i++) {
+      if (typeByte >= thresholds[i]) {
+        return i as PlanetType;
+      }
+    }
+    // this should never happen
+    return PlanetType.PLANET;
+  }
+
+  private async getBiome(loc: WorldLocation): Promise<Biome> {
+    const contractConstants = await this.getConstants();
+    const { perlin, biomebase } = loc;
+    const spaceType = await this.spaceTypeFromPerlin(perlin);
+
+    if (spaceType === SpaceType.DEAD_SPACE) return Biome.CORRUPTED;
+
+    let biome = 3 * spaceType;
+    if (biomebase < contractConstants.BIOME_THRESHOLD_1) biome += 1;
+    else if (biomebase < contractConstants.BIOME_THRESHOLD_2) biome += 2;
+    else biome += 3;
+
+    return biome as Biome;
+  }
+
+  private async getDefaultPlanet(location: WorldLocation): Promise<LocatablePlanet> {
+    const contractConstants = await this.getConstants();
+    const { perlin } = location;
+    const hex = location.hash;
+    const planetLevel = await this.planetLevelFromHexPerlin(hex, perlin);
+    const planetType = await this.planetTypeFromHexPerlin(hex, perlin);
+    const spaceType = await this.spaceTypeFromPerlin(perlin);
+
+    const [energyCapBonus, energyGroBonus, rangeBonus, speedBonus, defBonus, spaceJunkBonus] =
+      bonusFromHex(hex);
+
+    let energyCap = contractConstants.defaultPopulationCap[planetLevel];
+    let energyGro = contractConstants.defaultPopulationGrowth[planetLevel];
+    let range = contractConstants.defaultRange[planetLevel];
+    let speed = contractConstants.defaultSpeed[planetLevel];
+    let defense = contractConstants.defaultDefense[planetLevel];
+    let silCap = contractConstants.defaultSilverCap[planetLevel];
+    let spaceJunk = contractConstants.PLANET_LEVEL_JUNK[planetLevel];
+
+    let silGro = 0;
+    if (planetType === PlanetType.SILVER_MINE) {
+      silGro = contractConstants.defaultSilverGrowth[planetLevel];
+    }
+
+    energyCap *= energyCapBonus ? 2 : 1;
+    energyGro *= energyGroBonus ? 2 : 1;
+    range *= rangeBonus ? 2 : 1;
+    speed *= speedBonus ? 2 : 1;
+    defense *= defBonus ? 2 : 1;
+    spaceJunk = Math.floor(spaceJunk / (spaceJunkBonus ? 2 : 1));
+
+    if (spaceType === SpaceType.DEAD_SPACE) {
+      range *= 2;
+      speed *= 2;
+      energyCap *= 2;
+      energyGro *= 2;
+      silCap *= 2;
+      silGro *= 2;
+
+      defense = Math.floor((defense * 3) / 20);
+    } else if (spaceType === SpaceType.DEEP_SPACE) {
+      range *= 1.5;
+      speed *= 1.5;
+      energyCap *= 1.5;
+      energyGro *= 1.5;
+      silCap *= 1.5;
+      silGro *= 1.5;
+
+      defense *= 0.25;
+    } else if (spaceType === SpaceType.SPACE) {
+      range *= 1.25;
+      speed *= 1.25;
+      energyCap *= 1.25;
+      energyGro *= 1.25;
+      silCap *= 1.25;
+      silGro *= 1.25;
+
+      defense *= 0.5;
+    }
+
+    // apply stat modifiers for special planet types
+    if (planetType === PlanetType.SILVER_MINE) {
+      silCap *= 2;
+      defense *= 0.5;
+    } else if (planetType === PlanetType.SILVER_BANK) {
+      speed /= 2;
+      silCap *= 10;
+      energyGro = 0;
+      energyCap *= 5;
+    } else if (planetType === PlanetType.TRADING_POST) {
+      defense *= 0.5;
+      silCap *= 2;
+    }
+
+    let pirates = (energyCap * contractConstants.defaultBarbarianPercentage[planetLevel]) / 100;
+    // increase pirates
+    if (spaceType === SpaceType.DEAD_SPACE) pirates *= 20;
+    else if (spaceType === SpaceType.DEEP_SPACE) pirates *= 10;
+    else if (spaceType === SpaceType.SPACE) pirates *= 4;
+
+    if (planetType === PlanetType.SILVER_BANK) pirates /= 2;
+
+    const silver = planetType === PlanetType.SILVER_MINE ? silCap / 2 : 0;
+
+    speed *= contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
+    energyGro *= contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
+    silGro *= contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
+
+    const biome = this.getBiome(location);
+
+    return {
+      locationId: hex,
+      perlin,
+      spaceType,
+      owner: EMPTY_ADDRESS,
+      hatLevel: 0,
+      bonus: bonusFromHex(hex),
+
+      planetLevel,
+      planetType,
+      isHomePlanet: false,
+
+      energyCap: energyCap,
+      energyGrowth: energyGro,
+
+      silverCap: silCap,
+      silverGrowth: silGro,
+
+      range,
+      speed,
+      defense,
+
+      energy: pirates,
+      silver,
+
+      spaceJunk,
+
+      lastUpdated: Math.floor(Date.now() / 1000),
+
+      upgradeState: [0, 0, 0],
+
+      transactions: new TxCollection(),
+      unconfirmedClearEmoji: false,
+      unconfirmedAddEmoji: false,
+      loadingServerState: false,
+      silverSpent: 0,
+
+      prospectedBlockNumber: undefined,
+      heldArtifactIds: [],
+      destroyed: false,
+      isInContract: false,
+      syncedWithContract: false,
+      needsServerRefresh: false,
+      coordsRevealed: false,
+      location,
+      biome: await biome,
+      hasTriedFindingArtifact: false,
+      messages: undefined,
+      pausers: 0,
+
+      invader: EMPTY_ADDRESS,
+      capturer: EMPTY_ADDRESS,
+    };
+  }
+
+  public async bulkGetDefaultPlanets(
+    toLoadPlanets: LocationId[],
+    onProgressPlanet?: (fractionCompleted: number) => void,
+    onProgressMetadata?: (fractionCompleted: number) => void
+  ): Promise<Map<LocationId, Planet>> {
+    const defaultPlanets = await this.bulkGetPlanets(
+      toLoadPlanets,
+      onProgressPlanet,
+      onProgressMetadata
+    );
+
+    for (const locationId of defaultPlanets.keys()) {
+      const planet = <LocatablePlanet>defaultPlanets.get(locationId)!;
+
+      if (!('location' in planet)) {
+        continue;
+      }
+
+      defaultPlanets.set(locationId, await this.getDefaultPlanet(planet.location));
+    }
+
+    return defaultPlanets;
   }
 
   public async getPlanetById(planetId: LocationId): Promise<Planet | undefined> {

@@ -928,7 +928,7 @@ class GameManager extends EventEmitter {
     const planetVoyageMap: Map<LocationId, QueuedArrival[]> = new Map();
 
     const allVoyages = await this.contractsAPI.getAllArrivals(planetIds);
-    const planetsToUpdateMap = await this.contractsAPI.bulkGetPlanets(planetIds);
+    const planetsToUpdateMap = await this.contractsAPI.bulkGetDefaultPlanets(planetIds);
     const artifactsOnPlanets = await this.contractsAPI.bulkGetArtifactsOnPlanets(planetIds);
     planetsToUpdateMap.forEach((planet, locId) => {
       if (planetsToUpdateMap.has(locId)) {
